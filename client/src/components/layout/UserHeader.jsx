@@ -10,9 +10,10 @@ export default function UserHeader() {
             console.log("URL is coppied", currentUrl);
         });
         toaster.create({
-            description: "URL is coppied",
+            title:"Success",
+            description: "Profile URL is coppied",
             type: "success",
-            duration: 9000,
+            duration: 3000,
             closable: true
         })
         
@@ -28,7 +29,11 @@ export default function UserHeader() {
                     <Flex gap={2} alignItems={"center"}>
                         <Text fontSize={"sm"}>markzuckerberg</Text>
                         <Text
-                            fontSize={"xs"}
+                            fontSize={{
+                                base: "xs",
+                                md: "sm",
+                                lg: "md"
+                            }}
                             bg={"gray.800"}
                             color={"gray.300"}
                             p={1}
@@ -38,7 +43,12 @@ export default function UserHeader() {
                     </Flex>
                 </Box>
                 <Box>
-                    <Avatar.Root size={"xl"} >
+                    <Avatar.Root size={
+                        {
+                            base: "md",
+                            md: "2xl"
+                        }
+                    } >
                         <Avatar.Fallback name="Mark Zukerberg" />
                         <Avatar.Image src="/zuck-avatar.png" />
                     </Avatar.Root>
@@ -49,9 +59,9 @@ export default function UserHeader() {
             <Flex w={"full"} justifyContent={"space-between"}>
 
                 <Flex gap={2} alignItems={"center"}>
-                    <Text color={"gray.200"}>3.2K followers</Text>
-                    <Box w="1" h="1" bg={"gray.200"} borderRadius={"full"}></Box>
-                    <Link color={"gray.200"}>instagram.com</Link>
+                    <Text color={"gray.400"}>3.2K followers</Text>
+                    <Box w="1" h="1" bg={"gray.400"} borderRadius={"full"}></Box>
+                    <Link color={"gray.400"}>instagram.com</Link>
                 </Flex>
                 <Flex>
                     <Box className="icon-container">
@@ -72,6 +82,16 @@ export default function UserHeader() {
                         </Portal>
                     </Menu.Root>
                 </Flex>
+            </Flex>
+
+            <Flex w={"full"}>
+                <Flex flex={1} borderBottom={"1.5px solid white"} justifyContent={"center"} pb="3" cursor={"pointer"}>
+                    <Text fontWeight={"bold"}>Threads</Text>
+                </Flex>
+                <Flex flex={1} borderBottom={"1px solid grey"} justifyContent={"center"} color={"gray"} pb="3" cursor={"pointer"}>
+                    <Text fontWeight={"bold"}>Replies</Text>
+                </Flex>
+
             </Flex>
         </VStack>
     )
