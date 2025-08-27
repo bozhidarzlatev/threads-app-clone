@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Actions from "./Actions";
 import { useState } from "react";
 
-export default function UserPost({likes, replies, postImg, postTitle}) {
+export default function UserPost({ likes, replies, postImg, postTitle }) {
     const [liked, setLiked] = useState(false)
 
     return (
@@ -18,7 +18,7 @@ export default function UserPost({likes, replies, postImg, postTitle}) {
                     <Box w={1} h={"full"} bg="gray.400" my={2}></Box>
                     <Box position={"relative"} w={"full"} pt={"2px"}>
 
-                        <AvatarGroup gap="0"  spaceX="-4" size="xs" pt={"2px"} top={"0px"} left={"15px"} mr={2}>
+                        <AvatarGroup gap="0" spaceX="-4" size="xs" pt={"2px"} top={"0px"} left={"15px"} mr={2}>
                             <Avatar.Root>
                                 <Avatar.Fallback name="Uchiha Sasuke" />
                                 <Avatar.Image src="https://cdn.myanimelist.net/r/84x124/images/characters/9/131317.webp?s=d4b03c7291407bde303bc0758047f6bd" />
@@ -32,7 +32,7 @@ export default function UserPost({likes, replies, postImg, postTitle}) {
                             <Avatar.Root>
                                 <Avatar.Fallback name="Uchiha Chan" />
                                 <Avatar.Image src="https://cdn.myanimelist.net/r/84x124/images/characters/9/105421.webp?s=269ff1b2bb9abe3ac1bc443d3a76e863" />
-                            </Avatar.Root> 
+                            </Avatar.Root>
                             {/* <Avatar.Root variant="solid">
                                 <Avatar.Fallback>+2</Avatar.Fallback>
                             </Avatar.Root> */}
@@ -54,17 +54,17 @@ export default function UserPost({likes, replies, postImg, postTitle}) {
                     <Text fontSize={"sm"}>{postTitle}</Text>
                     {postImg && (
 
-                        
+
                         <Box
-                        borderRadius={6}
-                        overflow="hidden"
-                        border="1px solid"
-                        borderColor="gray.500"
+                            borderRadius={6}
+                            overflow="hidden"
+                            border="1px solid"
+                            borderColor="gray.500"
                         >
-                        <Image src={postImg} w={"full"}></Image>
-                    </Box>
+                            <Image src={postImg} w={"full"}></Image>
+                        </Box>
                     )
-                }
+                    }
 
                     <Flex gap={3} my={1}>
                         <Actions liked={liked} setLiked={setLiked}></Actions>

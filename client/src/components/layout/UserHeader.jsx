@@ -29,11 +29,7 @@ export default function UserHeader() {
                     <Flex gap={2} alignItems={"center"}>
                         <Text fontSize={"sm"}>markzuckerberg</Text>
                         <Text
-                            fontSize={{
-                                base: "xs",
-                                md: "sm",
-                                lg: "md"
-                            }}
+                            fontSize={"xs"}
                             bg={"gray.800"}
                             color={"gray.300"}
                             p={1}
