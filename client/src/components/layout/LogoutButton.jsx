@@ -19,21 +19,12 @@ export default function LogoutButton() {
                 return
             };
 
-            showToast(true, "User logged out successfully!")
-
             localStorage.removeItem("user-threads");
-
-            toaster.create({
-                title: "Success!",
-                description: `Successfully logged out!`,
-                type: "success",
-                duration: 3000,
-                closable: true
-            })
-
+            showToast(true, "User logged out successfully!")
+            
         } catch (error) {
+            showToast(false, error)
             console.log(error);
-
         }
     }
 

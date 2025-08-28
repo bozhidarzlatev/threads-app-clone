@@ -25,10 +25,45 @@ import {
 
     InputRightElement,
 } from "@chakra-ui/input"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import useShowToast from '../../hooks/useShowToast'
 
 export default function LoginCard() {
+    const navigate = useNavigate()
+    const showToast = useShowToast()
     const [showPassword, setShowPassword] = useState(false)
+    const [inputs, setInputs] = useState({
+        username: "",
+        password: ""
+    })
+
+    const handleLogin = async () => {
+        try {
+
+            const res = await fetch("/api/users/login", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify(inputs)
+            })
+
+            const data = await res.json();
+
+            if (data.error) {
+                showToast(false, data.error)
+                
+                return
+            };
+            // TO ADD CONTEX
+            localStorage.setItem("user-threads", JSON.stringify(data))
+            showToast(true, `User ${inputs.username} logged successfully`)
+            
+            navigate("/")
+        } catch (error) {
+            showToast(false, error)
+        }
+    }
 
     return (
         <Flex
@@ -59,12 +94,18 @@ export default function LoginCard() {
 
                         <FormControl id="email" isRequired>
                             <FormLabel>Username</FormLabel>
-                            <Input type="text" />
+                            <Input type="text"
+                                onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
+                                value={inputs.username}
+                            />
                         </FormControl>
                         <FormControl id="password" isRequired>
                             <FormLabel>Password</FormLabel>
                             <InputGroup>
-                                <Input type={showPassword ? 'text' : 'password'} />
+                                <Input
+                                    onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
+                                    value={inputs.password}
+                                    type={showPassword ? 'text' : 'password'} />
                                 <InputRightElement h={'full'}>
                                     <Button
                                         variant={'ghost'}
@@ -82,7 +123,9 @@ export default function LoginCard() {
                                 color={'white'}
                                 _hover={{
                                     bg: 'blue.500',
-                                }}>
+                                }}
+                                onClick={handleLogin}
+                            >
                                 Login
                             </Button>
                         </Stack>
