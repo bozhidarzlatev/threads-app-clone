@@ -4,8 +4,11 @@ import { postController } from '../controllers/postController.js';
 
 const router = express.Router();
 
-router.get("/:postId", protectRoute, postController.getPost )
+router.get("/:postId",  postController.getPost )
 router.post("/create", protectRoute, postController.createPost )
+router.post("/delete/:postId", protectRoute, postController.deletePost )
+router.post("/like/:postId", protectRoute, postController.likeUnlikePost )
+router.post("/reply/:postId", protectRoute, postController.replyPost )
 
 
 export default router;
