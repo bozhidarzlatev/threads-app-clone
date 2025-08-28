@@ -15,26 +15,28 @@ import {
 } from 'recoil';
 import SignupCard from "./components/layout/signupCard"
 import LoginCard from "./components/layout/LoginCard"
+import LogoutButton from "./components/layout/LogoutButton"
 
 
 function App() {
 
   return (
     <>
-        <RecoilRoot>
+      <RecoilRoot>
 
-      <Toaster />
-      <Container maxW="620px">
-        <Header />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/auth/signup" element={<SignupCard />} />
-          <Route path="/auth/login" element={<LoginCard />} />
-          <Route path="/:username" element={<UserPage />} />
-          <Route path="/:username/post/:pid" element={<PostPage />} />
-        </Routes>
-      </Container>
-        </RecoilRoot>
+        <Toaster />
+        <Container maxW="620px">
+          <Header />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/auth/signup" element={<SignupCard />} />
+            <Route path="/auth/login" element={<LoginCard />} />
+            <Route path="/:username" element={<UserPage />} />
+            <Route path="/:username/post/:pid" element={<PostPage />} />
+          </Routes>
+          <LogoutButton />
+        </Container>
+      </RecoilRoot>
 
     </>
   )

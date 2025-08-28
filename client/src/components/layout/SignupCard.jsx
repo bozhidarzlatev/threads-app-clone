@@ -24,10 +24,52 @@ import {
 
     InputRightElement,
 } from "@chakra-ui/input"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { toaster } from '../ui/toaster'
+import useShowToast from '../../hooks/useShowToast'
 
 export default function SignupCard() {
+    const navigate = useNavigate();
+    const showToast = useShowToast()
     const [showPassword, setShowPassword] = useState(false)
+    const [inputs, setInputs] = useState({
+        name: "",
+        username: "",
+        email: "",
+        password: ""
+    })
+
+
+    const handleSignUp = async () => {
+
+        try {
+            console.log(inputs);
+
+            const res = await fetch("/api/users/signup", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify(inputs)
+            });
+            const data = await res.json();
+
+            if (data.error) {
+                showToast(false, data.error)
+                
+                return
+            };
+            // TO ADD CONTEX
+            localStorage.setItem("user-threads", JSON.stringify(data))
+            showToast(true, `User ${inputs.username} created successfully`)
+            
+            navigate("/")
+        } catch (error) {
+            showToast(false, error)
+            console.log(error);
+
+        }
+    }
 
     return (
         <Flex
@@ -54,24 +96,36 @@ export default function SignupCard() {
                             <Box>
                                 <FormControl id="firstName" isRequired>
                                     <FormLabel>Full name</FormLabel>
-                                    <Input type="text" />
+                                    <Input type="text"
+                                        onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
+                                        value={inputs.name}
+                                    />
                                 </FormControl>
                             </Box>
                             <Box>
                                 <FormControl id="lastName" isRequired>
                                     <FormLabel>Username</FormLabel>
-                                    <Input type="text" />
+                                    <Input type="text"
+                                        onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
+                                        value={inputs.username}
+                                    />
                                 </FormControl>
                             </Box>
                         </HStack>
                         <FormControl id="email" isRequired>
                             <FormLabel>Email address</FormLabel>
-                            <Input type="email" />
+                            <Input type="email"
+                                onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
+                                value={inputs.email}
+                            />
                         </FormControl>
                         <FormControl id="password" isRequired>
                             <FormLabel>Password</FormLabel>
                             <InputGroup>
-                                <Input type={showPassword ? 'text' : 'password'} />
+                                <Input
+                                    onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
+                                    value={inputs.password}
+                                    type={showPassword ? 'text' : 'password'} />
                                 <InputRightElement h={'full'}>
                                     <Button
                                         variant={'ghost'}
@@ -89,7 +143,9 @@ export default function SignupCard() {
                                 color={'white'}
                                 _hover={{
                                     bg: 'blue.500',
-                                }}>
+                                }}
+                                onClick={handleSignUp}
+                            >
                                 Sign up
                             </Button>
                         </Stack>
@@ -100,7 +156,7 @@ export default function SignupCard() {
                                     Already a user?
                                 </Text>
                                 <Link to={"/auth/login"}>
-                                <Text  color={'blue.400'}>Login</Text>
+                                    <Text color={'blue.400'}>Login</Text>
                                 </Link>
                             </Flex>
                         </Stack>
