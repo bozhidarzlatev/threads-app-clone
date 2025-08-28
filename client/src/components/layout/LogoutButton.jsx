@@ -1,5 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import useShowToast from "../../hooks/useShowToast";
+import {FiLogOut} from "react-icons/fi";
 
 export default function LogoutButton() {
     const showToast = useShowToast()
@@ -32,10 +33,10 @@ export default function LogoutButton() {
         <Button
             position={"fixed"}
             top={"30px"}
-            right={"30"}
+            right={"30px"}
             size={"sm"}
             onClick={handleLogout}>
-            Logout
+            <FiLogOut />
         </Button>
     )
 }

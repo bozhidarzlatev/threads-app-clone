@@ -1,12 +1,36 @@
-# React + Vite
+# Thread Clone App
+## Overview
+```
+The Thread Clone App is a social media platform inspired by Threads. This app allows users to create, view, and interact with posts, just like other popular social media platforms. It also supports user authentication, profile management, liking, replying, and chatting.
+```
+## Features
+```
+- Users will have the ability to:
+- Sign Up / Log In / Log Out: Secure authentication using JWT (JSON Web Tokens).
+- Update Profile: Edit user information such as name, bio, and profile picture.
+- Create and View Posts: Users can share their thoughts, images, or links through posts. They can also view posts from others.
+- Delete Posts: Users can delete their own posts.
+- Like Posts: Users can like any post to express approval.
+- Reply to Threads: Reply to threads to engage in conversations.
+- Chat with Other Users: Real-time messaging feature using WebSockets (or similar).
+```
+## Stack
+```
+This app was built with the MERN Stack:
+MongoDB: NoSQL database for storing user data and posts.
+Express.js: Backend framework for handling API requests.
+React: Frontend library for building the user interface.
+Node.js: JavaScript runtime for running the server-side code.
+Additionally, the app uses:
+Socket.io for real-time chat functionality
+JWT (JSON Web Tokens) for user authentication
+```
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Roadmap
+```
+- [x] Build UI
+- [x] Build Backend
+- [x] Set up MongoDB
+- [x] Implement Authenticatin
+- [ ] Implement post Functionalities
+```
