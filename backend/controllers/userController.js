@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from 'bcryptjs'
 import generateTokenAndSetCookies from "../utils/generateTokenAndSetCookies.js";
+import { v2 as cloudinary } from "cloudinary"
 
 const signupUser = async (req, res) => {
     try {
@@ -31,7 +32,8 @@ const signupUser = async (req, res) => {
                 name: newUser.name,
                 email: newUser.email,
                 username: newUser.username,
-                profilePic: user.profilePic
+                profilePic: user.profilePic,
+                bio: user.bio
 
             })
         } else {
@@ -62,7 +64,8 @@ const loginUser = async (req, res) => {
             name: user.name,
             email: user.email,
             username: user.username,
-            profilePic: user.profilePic
+            profilePic: user.profilePic,
+            bio: user.bio
         })
 
     } catch (error) {
@@ -116,7 +119,9 @@ const followUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
 
-    const { name, email, user, password, profilePic, bio } = req.body
+    const { name, email, username, password, bio } = req.body;
+    let { profilePic } = req.body
+
     const userId = req.user._id;
     try {
 
@@ -131,12 +136,24 @@ const updateUser = async (req, res) => {
             user.password = hashedPassword
         }
 
+        
+        if (profilePic) {
+            
+            if (user.profilePic) {
+                const delRes = await cloudinary.uploader.destroy(user.profilePic.split("/").pop().split(".")[0]);
+            }
+            const uploadedRes = await cloudinary.uploader.upload(profilePic);
+            profilePic = uploadedRes.secure_url;
+        }
+
+        
+        
         user.name = name || user.name
         user.email = email || user.email
         user.username = username || user.username
         user.profilePic = profilePic || user.profilePic
         user.bio = bio || user.bio
-
+        
         user = await user.save();
         res.status(200).json({ message: "Profile updated successfully", user })
     } catch (error) {

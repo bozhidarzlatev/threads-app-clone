@@ -9,8 +9,6 @@ export default function NavigateButtons() {
     const { userDataHandler, userData } = useUserContext()
     const showToast = useShowToast()
 
-    console.log(userData);
-
     const handleLogout = async () => {
         try {
             const res = await fetch("/api/users/logout", {
@@ -39,15 +37,17 @@ export default function NavigateButtons() {
         <>
             {userData._id ? (
                 <Flex gap={2} position="fixed" top="30px" right="30px">
-<Avatar.Root 
-    size="md" 
-    borderWidth="3px" 
-    borderColor="green.400"
-    borderRadius={"full"}
->
-    <Avatar.Fallback name={userData.name} />
-    <Avatar.Image src={userData.profilePic} />
-</Avatar.Root>
+                    <Link to={"/auth/update"}>
+                    <Avatar.Root
+                        size="md"
+                        borderWidth="3px"
+                        borderColor="green.400"
+                        borderRadius={"full"}
+                        >
+                        <Avatar.Fallback name={userData.name} />
+                        <Avatar.Image src={userData.profilePic} />
+                    </Avatar.Root>
+                        </Link>
                     <Button
                         bg={"red.200"}
                         size={"sm"}
