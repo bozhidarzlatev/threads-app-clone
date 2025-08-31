@@ -5,7 +5,7 @@ import generateTokenAndSetCookies from "../utils/generateTokenAndSetCookies.js";
 const signupUser = async (req, res) => {
     try {
         const { name, email, username, password } = req.body;
-        
+
         const user = await User.findOne({ $or: [{ email }, { username }] })
 
         if (user) {
@@ -31,6 +31,8 @@ const signupUser = async (req, res) => {
                 name: newUser.name,
                 email: newUser.email,
                 username: newUser.username,
+                profilePic: user.profilePic
+
             })
         } else {
             res.status(400).json({ error: 'Invaid user data!' })
@@ -60,6 +62,7 @@ const loginUser = async (req, res) => {
             name: user.name,
             email: user.email,
             username: user.username,
+            profilePic: user.profilePic
         })
 
     } catch (error) {

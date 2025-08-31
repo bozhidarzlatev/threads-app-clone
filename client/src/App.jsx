@@ -7,13 +7,12 @@ import { Toaster } from "./components/ui/toaster"
 import HomePage from "./pages/HomePage"
 import SignupCard from "./components/layout/signupCard"
 import LoginCard from "./components/layout/LoginCard"
-import LogoutButton from "./components/layout/LogoutButton"
 import UpdateProfilePage from "./pages/UpdateProfilePage"
 import UserProvider from "./providers/UserProvider"
-
+import NavigateButtons from "./components/layout/NavigateButtons"
 
 function App() {
-
+  
   return (
     <>
       <UserProvider>
@@ -31,7 +30,7 @@ function App() {
           </Routes>
           
         </Container>
-        <LogoutButton />
+        <NavigateButtons />
       </UserProvider>
 
 
