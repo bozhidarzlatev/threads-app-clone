@@ -25,10 +25,11 @@ import {
     InputRightElement,
 } from "@chakra-ui/input"
 import { Link, useNavigate } from 'react-router-dom'
-import { toaster } from '../ui/toaster'
 import useShowToast from '../../hooks/useShowToast'
+import { useUserContext } from '../../contexts/UserContext'
 
 export default function SignupCard() {
+    const { userDataHandler } = useUserContext()
     const navigate = useNavigate();
     const showToast = useShowToast()
     const [showPassword, setShowPassword] = useState(false)
@@ -58,7 +59,8 @@ export default function SignupCard() {
                 
                 return
             };
-            // TO ADD CONTEX
+            
+            userDataHandler(data)
             localStorage.setItem("user-threads", JSON.stringify(data))
             showToast(true, `User ${inputs.username} created successfully`)
             

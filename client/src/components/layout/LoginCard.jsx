@@ -27,8 +27,10 @@ import {
 } from "@chakra-ui/input"
 import { Link, useNavigate } from 'react-router-dom'
 import useShowToast from '../../hooks/useShowToast'
+import { useUserContext } from '../../contexts/UserContext'
 
 export default function LoginCard() {
+    const { userDataHandler } = useUserContext()
     const navigate = useNavigate()
     const showToast = useShowToast()
     const [showPassword, setShowPassword] = useState(false)
@@ -38,6 +40,7 @@ export default function LoginCard() {
     })
 
     const handleLogin = async () => {
+
         try {
 
             const res = await fetch("/api/users/login", {
@@ -52,13 +55,13 @@ export default function LoginCard() {
 
             if (data.error) {
                 showToast(false, data.error)
-                
+
                 return
             };
-            // TO ADD CONTEX
+            userDataHandler(data)
             localStorage.setItem("user-threads", JSON.stringify(data))
             showToast(true, `User ${inputs.username} logged successfully`)
-            
+
             navigate("/")
         } catch (error) {
             showToast(false, error)

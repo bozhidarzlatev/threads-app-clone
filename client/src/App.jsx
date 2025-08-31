@@ -9,12 +9,14 @@ import SignupCard from "./components/layout/signupCard"
 import LoginCard from "./components/layout/LoginCard"
 import LogoutButton from "./components/layout/LogoutButton"
 import UpdateProfilePage from "./pages/UpdateProfilePage"
+import UserProvider from "./providers/UserProvider"
 
 
 function App() {
 
   return (
     <>
+      <UserProvider>
 
         <Toaster />
         <Container maxW="620px">
@@ -30,6 +32,7 @@ function App() {
           
         </Container>
         <LogoutButton />
+      </UserProvider>
 
 
     </>
