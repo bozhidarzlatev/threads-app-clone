@@ -29,7 +29,6 @@ export default function NavigateButtons() {
 
         } catch (error) {
             showToast(false, error)
-            console.log(error);
         }
     }
 
