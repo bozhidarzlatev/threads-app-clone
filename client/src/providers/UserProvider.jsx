@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { UserContext } from "../contexts/UserContext";
+import usePersistedState from "../hooks/usePersistedState";
 
 export default function UserProvider({children}) {
-    const [userData , setUserData] = useState(null);
+    const [userData , setUserData] = usePersistedState("user-threads", {});
 
     const userDataHandler = (data) => {
         setUserData(data);

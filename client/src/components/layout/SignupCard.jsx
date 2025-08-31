@@ -60,9 +60,8 @@ export default function SignupCard() {
                 return
             };
             
-            userDataHandler(data)
-            localStorage.setItem("user-threads", JSON.stringify(data))
-            showToast(true, `User ${inputs.username} created successfully`)
+            userDataHandler(data);
+            showToast(true, `User ${inputs.username} created successfully`);
             
             navigate("/")
         } catch (error) {

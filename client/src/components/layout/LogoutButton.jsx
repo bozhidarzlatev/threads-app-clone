@@ -23,8 +23,7 @@ export default function LogoutButton() {
                 return
             };
             
-            userDataHandler(null)
-            localStorage.removeItem("user-threads");
+            userDataHandler({})
             showToast(true, "User logged out successfully!")
 
         } catch (error) {

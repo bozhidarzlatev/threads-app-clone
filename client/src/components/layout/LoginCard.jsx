@@ -58,9 +58,8 @@ export default function LoginCard() {
 
                 return
             };
-            userDataHandler(data)
-            localStorage.setItem("user-threads", JSON.stringify(data))
-            showToast(true, `User ${inputs.username} logged successfully`)
+            userDataHandler(data);
+            showToast(true, `User ${inputs.username} logged successfully`);
 
             navigate("/")
         } catch (error) {
