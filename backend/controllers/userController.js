@@ -88,6 +88,7 @@ const logoutUser = async (req, res) => {
 
 
 const followUser = async (req, res) => {
+    
     try {
         const { id } = req.params;
         const userToModify = await User.findById(id);
@@ -140,6 +141,8 @@ const updateUser = async (req, res) => {
         if (profilePic) {
             
             if (user.profilePic) {
+                console.log(user.profilePic.split("/").pop().split(".")[0]);
+                
                 const delRes = await cloudinary.uploader.destroy(user.profilePic.split("/").pop().split(".")[0]);
             }
             const uploadedRes = await cloudinary.uploader.upload(profilePic);
