@@ -3,7 +3,8 @@ import useShowToast from "../../hooks/useShowToast";
 import { FiLogOut, FiLogIn } from "react-icons/fi";
 import { GrUserNew } from "react-icons/gr";
 import { useUserContext } from "../../contexts/UserContext";
-import { data, Link } from "react-router-dom";
+import {  Link } from "react-router-dom";
+import CreatePost from "./CreatePost";
 
 export default function NavigateButtons() {
     const { userDataHandler, userData } = useUserContext()
@@ -37,16 +38,16 @@ export default function NavigateButtons() {
             {userData._id ? (
                 <Flex gap={2} position="fixed" top="30px" right="30px">
                     <Link to={"/auth/update"}>
-                    <Avatar.Root
-                        size="md"
-                        borderWidth="3px"
-                        borderColor="green.400"
-                        borderRadius={"full"}
+                        <Avatar.Root
+                            size="md"
+                            borderWidth="3px"
+                            borderColor="green.400"
+                            borderRadius={"full"}
                         >
-                        <Avatar.Fallback name={userData.name} />
-                        <Avatar.Image src={userData.profilePic} />
-                    </Avatar.Root>
-                        </Link>
+                            <Avatar.Fallback name={userData.name} />
+                            <Avatar.Image src={userData.profilePic} />
+                        </Avatar.Root>
+                    </Link>
                     <Button
                         bg={"red.200"}
                         size={"sm"}
@@ -76,6 +77,7 @@ export default function NavigateButtons() {
             )
             }
 
+{userData._id && <CreatePost/>}
         </>
     )
 }
