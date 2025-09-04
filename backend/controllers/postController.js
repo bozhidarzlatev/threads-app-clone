@@ -1,9 +1,11 @@
 import Post from "../models/postModel.js";
 import User from "../models/userModel.js";
+import { v2 as cloudinary } from "cloudinary"
 
 const createPost = async (req, res) => {
     try {
-        const { postedBy, text, img } = req.body;
+        const { postedBy, text } = req.body;
+        let { img } = req.body
 
         if (!postedBy || !text) {
             return res.status(400).json({ error: "Postedby and text fields are required!" })
@@ -23,6 +25,12 @@ const createPost = async (req, res) => {
         const maxLen = 500;
         if (text.length > maxLen) {
             return res.status(400).json({ error: `Text must be less than ${maxLen} chars` })
+        }
+
+        if (img) {
+            const uploadedRes = await cloudinary.uploader.upload(img);
+            img = uploadedRes.secure_url;
+
         }
 
         const newPost = new Post({ postedBy, text, img });
@@ -138,16 +146,16 @@ const replyPost = async (req, res) => {
 }
 
 const getFeedPost = async (req, res) => {
+    
     try {
         const userId = req.user._id;
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ error: `User not found!` })
         }
-
+        
         const following = user.following;
-
-        const feedPosts = await Post.find({postedBy: {$in:following}}).sort({createdAt: -1});
+        const feedPosts = await Post.find({ postedBy: { $in: following } }).sort({ createdAt: -1 });
 
         res.status(200).json(feedPosts)
 

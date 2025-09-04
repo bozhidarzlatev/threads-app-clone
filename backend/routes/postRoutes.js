@@ -5,7 +5,7 @@ import { postController } from '../controllers/postController.js';
 const router = express.Router();
 
 router.get("/:postId",  postController.getPost )
-router.get("/feed",  protectRoute,  postController.getFeedPost )
+router.get("/feed/get",  protectRoute,  postController.getFeedPost )
 router.post("/create", protectRoute, postController.createPost )
 router.post("/delete/:postId", protectRoute, postController.deletePost )
 router.post("/like/:postId", protectRoute, postController.likeUnlikePost )

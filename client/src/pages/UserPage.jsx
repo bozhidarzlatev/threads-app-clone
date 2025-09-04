@@ -4,12 +4,13 @@ import UserPost from "../components/layout/UserPost";
 import { useEffect } from "react";
 import { data, useParams } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
+import { Flex, Spinner } from "@chakra-ui/react";
 
 export default function UserPage() {
     const [user, setUser] = useState(null);
-    const { username } = useParams()
-    const showToast = useShowToast()
-
+    const { username } = useParams();
+    const showToast = useShowToast();
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const getUser = async () => {
@@ -26,6 +27,8 @@ export default function UserPage() {
             } catch (error) {
                 showToast(false, data.error)
 
+            } finally {
+                setLoading(false)
             }
         }
 
@@ -33,7 +36,15 @@ export default function UserPage() {
 
     }, [username])
 
-    if (!user) return null
+    if(!user && loading) {
+        return (
+            <Flex justifyContent={"center"}>
+
+            <Spinner size={"xl"}/>
+            </Flex>
+        )
+    }
+    if (!user && !loading) return <h1>User not found!</h1>
 
     return (
         <>

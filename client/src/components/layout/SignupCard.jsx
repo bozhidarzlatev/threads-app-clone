@@ -37,7 +37,7 @@ export default function SignupCard() {
         name: "",
         username: "",
         email: "",
-        password: ""
+        password: "",
     })
 
 

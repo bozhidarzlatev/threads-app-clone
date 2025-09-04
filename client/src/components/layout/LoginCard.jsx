@@ -34,6 +34,7 @@ export default function LoginCard() {
     const navigate = useNavigate()
     const showToast = useShowToast()
     const [showPassword, setShowPassword] = useState(false)
+    const [loading, setLoading] = useState(false);
     const [inputs, setInputs] = useState({
         username: "",
         password: ""
@@ -42,7 +43,7 @@ export default function LoginCard() {
     
 
     const handleLogin = async () => {
-
+        setLoading(true)
         try {
 
             const res = await fetch("/api/users/login", {
@@ -66,6 +67,9 @@ export default function LoginCard() {
             navigate("/")
         } catch (error) {
             showToast(false, error)
+        } finally {
+
+            setLoading(false)
         }
     }
 
@@ -121,7 +125,7 @@ export default function LoginCard() {
                         </FormControl>
                         <Stack spacing={10} pt={2}>
                             <Button
-                                loadingText="Submitting"
+                                loadingText="Logging in!"
                                 size="lg"
                                 bg={'blue.400'}
                                 color={'white'}
@@ -129,6 +133,7 @@ export default function LoginCard() {
                                     bg: 'blue.500',
                                 }}
                                 onClick={handleLogin}
+                                loading={loading}
                             >
                                 Login
                             </Button>

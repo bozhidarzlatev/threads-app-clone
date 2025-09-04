@@ -65,7 +65,6 @@ export default function UserHeader({ user }) {
             setFollow(!follow);
             showToast(true, data.message);
 
-             await new Promise((resolve) => setTimeout(resolve, 1500));
         } catch (error) {
             showToast(false, data.error)
         } finally {
@@ -116,7 +115,7 @@ export default function UserHeader({ user }) {
             )}
             {currentUser._id !== user._id && (
 
-                <Button onClick={handleFollowUnfollow}   size={"sm"} isLoading={true}>{updating ? "Loaging..." : follow ? "Unfollow" : "Follow"}</Button>
+                <Button onClick={handleFollowUnfollow}   size={"sm"} loading={updating}>{updating ? "Loaging..." : follow ? "Unfollow" : "Follow"}</Button>
             )}
             <Flex w={"full"} justifyContent={"space-between"}>
 

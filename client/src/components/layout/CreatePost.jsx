@@ -19,8 +19,10 @@ export default function CreatePost() {
     const { handleimageChange, imgUrl, setImgUrl } = usePreviewimg();
     const fileRef = useRef(null);
     const [remaininChar, setRemainingChar] = useState(MAX_CHAR)
-    const {userData} = useUserContext();
-    const showToast = useShowToast()
+    const { userData } = useUserContext();
+    const showToast = useShowToast();
+    const [isOpen, setIsOpen] = useState(false);
+    const [loading, setLoading] = useState(false)
 
     const handleTextChange = (e) => {
         const inputText = e.target.value;
@@ -36,22 +38,34 @@ export default function CreatePost() {
     }
 
     const handleCreatePost = async () => {
-        const res = await fetch("/api/posts/create", {
-                            method: "POST",
+        setLoading(true)
+        try {
+            const res = await fetch("/api/posts/create", {
+                method: "POST",
                 headers: {
                     "Content-type": "application/json"
                 },
-                body: JSON.stringify({postedBy: userData._id, text: postText, img: imgUrl}  )
-        })
+                body: JSON.stringify({ postedBy: userData._id, text: postText, img: imgUrl })
+            })
 
-        const data = await res.json();
+            const data = await res.json();
 
-        
-        if (data.error) {
-            showToast(false, data.error)
+
+            if (data.error) {
+                showToast(false, data.error)
+                return
+            }
+
+            setPostText("");
+            setImgUrl("");
+            showToast(true, "Post successfully crearted!");
+            setIsOpen(false);
+        } catch (error) {
+            showToast(false, error);
+        } finally {
+            setLoading(false)
         }
-        setPostText("")
-        showToast(true, "Post successfully crearted!")
+
 
     }
 
@@ -59,10 +73,13 @@ export default function CreatePost() {
         <>
 
 
-            <Dialog.Root position={'fixed'} bottom={30}>
+            <Dialog.Root
+                open={isOpen} onOpenChange={(e) => setIsOpen(e.open)}
+                position={'fixed'} bottom={30}>
 
                 <Dialog.Trigger asChild>
                     <Button
+                    loading={loading}
                         position={'fixed'}
                         bottom={10}
                         right={10}
@@ -124,7 +141,7 @@ export default function CreatePost() {
                                 <Dialog.ActionTrigger asChild>
                                     <Button variant="outline">Cancel</Button>
                                 </Dialog.ActionTrigger>
-                                <Button onClick={handleCreatePost}>Post</Button>
+                                <Button loading={loading} onClick={handleCreatePost}>Post</Button>
                             </Dialog.Footer>
                             <Dialog.CloseTrigger asChild>
                                 <CloseButton size="sm" />
