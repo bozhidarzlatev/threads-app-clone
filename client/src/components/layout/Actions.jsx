@@ -1,8 +1,52 @@
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { useState } from "react";
+import useShowToast from "../../hooks/useShowToast";
+import { useUserContext } from "../../contexts/UserContext";
 
 
-export default function Actions({ liked, setLiked }) {
+export default function Actions({ post: post_ }) {
+    const {userData} = useUserContext();
+    const [liked, setLiked] = useState(post_.likes.includes(userData?._id));
+    const showToast = useShowToast();
+    const [post, setPost] = useState(post_);
+    const [isLiking, setIsLiking] = useState(false)
+
+    const handleLikeUnlikePost = async () => {
+        if(!userData._id) return showToast(false, "You must be logged on to liek posts!" );
+        if(isLiking) return
+        setIsLiking(true)
+
+        try {
+            const res = await fetch("/api/posts/like/" + post._id, {
+                method: "PUT",
+                headers: {
+                    "Content-type": "application/json"
+                },
+            })
+
+            const data = await res.json();
+
+            if (data.error) {
+                showToast(false, data.error )
+            }
+            
+            if(!liked) {
+                setPost({...post, likes:[...post.likes, userData._id] })
+            } else { 
+                setPost({...post, likes: post.likes.filter(id => id !== userData._id)})
+            }
+            setLiked(!liked)
+            showToast(true, data.message )
+        } catch (error) {
+            showToast(true, error )
+            
+        } finally {
+            setIsLiking(false)
+        }
+    }
+
     return (
+        <Flex gap={1} direction={"column"}>
         <Flex gap={3} my={2} onClick={(e) => e.preventDefault()}>
             <svg
                 aria-label='Like'
@@ -12,7 +56,7 @@ export default function Actions({ liked, setLiked }) {
                 role='img'
                 viewBox='0 0 24 22'
                 width='20'
-                onClick={() => setLiked(!liked)}
+                onClick={handleLikeUnlikePost}
             >
                 <path
                     d='M1 7.66c0 4.575 3.899 9.086 9.987 12.934.338.203.74.406 1.013.406.283 0 .686-.203 1.013-.406C19.1 16.746 23 12.234 23 7.66 23 3.736 20.245 1 16.672 1 14.603 1 12.98 1.94 12 3.352 11.042 1.952 9.408 1 7.328 1 3.766 1 1 3.736 1 7.66Z'
@@ -85,7 +129,14 @@ export default function Actions({ liked, setLiked }) {
                 ></polygon>
             </svg>
 
+
         </Flex>
+                    <Flex gap={2} alignItems={"center"} >
+                        <Text color="gray.400" fontSize={"sm"}>{post.replies.length} replies</Text>
+                        <Box w={0.5} h={0.5} borderRadius={"full"} bg="gray.400"></Box>
+                        <Text color="gray.400" fontSize={"sm"}>{post.likes.length} likes</Text>
+                    </Flex>
+                  </Flex> 
 
     )
 }

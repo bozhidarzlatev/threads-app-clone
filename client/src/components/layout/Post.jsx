@@ -6,7 +6,6 @@ import useShowToast from "../../hooks/useShowToast";
 import { formatDistance } from "date-fns"
 
 export default function Post({ post, postedBy }) {
-    const [liked, setLiked] = useState(false);
     const [user, setUser] = useState(null)
     const showToast = useShowToast();
     const navigate = useNavigate()
@@ -89,7 +88,7 @@ export default function Post({ post, postedBy }) {
                             <Image src="/verified.png" h={4} ml={1}></Image>
                         </Flex>
                         <Flex gap={4} alignItems={"center"}>
-                            <Text fontSize={"sm"} color={"gray.400"}>{formatDistance( new Date(post.createdAt), new Date() , {addSuffix: true})}</Text>
+                            <Text fontSize={"sm"} width={36} textAlign={"right"} color={"gray.400"}>{formatDistance( new Date(post.createdAt), new Date() , {addSuffix: true})}</Text>
 
                         </Flex>
                     </Flex>
@@ -109,14 +108,10 @@ export default function Post({ post, postedBy }) {
                     }
 
                     <Flex gap={3} my={1}>
-                        <Actions liked={liked} setLiked={setLiked}></Actions>
+                        <Actions post={post}></Actions>
                     </Flex>
 
-                    <Flex gap={2} alignItems={"center"} >
-                        <Text color="gray.400" fontSize={"sm"}>{post.replies.length} replies</Text>
-                        <Box w={0.5} h={0.5} borderRadius={"full"} bg="gray.400"></Box>
-                        <Text color="gray.400" fontSize={"sm"}>{post.likes.length} likes</Text>
-                    </Flex>
+
                 </Flex>
             </Flex>
 

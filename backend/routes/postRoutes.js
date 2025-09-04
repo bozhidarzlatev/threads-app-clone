@@ -8,8 +8,8 @@ router.get("/:postId",  postController.getPost )
 router.get("/feed/get",  protectRoute,  postController.getFeedPost )
 router.post("/create", protectRoute, postController.createPost )
 router.post("/delete/:postId", protectRoute, postController.deletePost )
-router.post("/like/:postId", protectRoute, postController.likeUnlikePost )
-router.post("/reply/:postId", protectRoute, postController.replyPost )
+router.put("/like/:postId", protectRoute, postController.likeUnlikePost )
+router.put("/reply/:postId", protectRoute, postController.replyPost )
 
 
 export default router;
