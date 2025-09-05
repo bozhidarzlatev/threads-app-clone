@@ -12,6 +12,7 @@ import { BsFillImageFill } from "react-icons/bs";
 import { useUserContext } from "../../contexts/UserContext";
 import useShowToast from "../../hooks/useShowToast";
 import { usePostContext } from "../../contexts/PostsContex";
+import { useParams } from "react-router-dom";
 
 const MAX_CHAR = 500
 
@@ -24,7 +25,8 @@ export default function CreatePost() {
     const showToast = useShowToast();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const {posts, postsDataHandler} = usePostContext()
+    const { posts, postsDataHandler } = usePostContext()
+    const { username } = useParams()
 
     const handleTextChange = (e) => {
         const inputText = e.target.value;
@@ -58,8 +60,10 @@ export default function CreatePost() {
                 return
             }
 
-            
-            postsDataHandler([data.newPost, ...posts])
+            if (username === userData.username) {
+                postsDataHandler([data.newPost, ...posts])
+
+            }
             setPostText("");
             setImgUrl("");
             setIsOpen(false);
@@ -77,16 +81,21 @@ export default function CreatePost() {
         <>
             <Dialog.Root
                 open={isOpen} onOpenChange={(e) => setIsOpen(e.open)}
-                position={'fixed'} bottom={30}>
+                position={'fixed'} bottom={30}
+            >
 
                 <Dialog.Trigger asChild>
                     <Button
-                    loading={loading}
+                        borderRadius={"full"}
+                        bg={"green.400"}
+                        loading={loading}
                         position={'fixed'}
                         bottom={10}
                         right={10}
-                        size="sm">
-                        <IoIosAdd />
+                        size="sm"
+                    >
+                        <IoIosAdd
+                        />
                         Post
                     </Button>
                 </Dialog.Trigger>

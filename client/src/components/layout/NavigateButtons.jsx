@@ -35,7 +35,7 @@ export default function NavigateButtons() {
 
     return (
         <>
-            {userData._id ? (
+            {/* {userData._id ? (
                 <Flex gap={2} position="fixed" top="30px" right="30px">
                     <Link to={"/auth/update"}>
                         <Avatar.Root
@@ -75,7 +75,7 @@ export default function NavigateButtons() {
                     </Link>
                 </Flex>
             )
-            }
+            } */}
 
         </>
     )

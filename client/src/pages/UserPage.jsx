@@ -66,7 +66,7 @@ export default function UserPage() {
             {posts.map((post) => (
                 <Post  key={post._id} post={post} postedBy={post.postedBy} setPosts={setPosts}/>
             ))}
-            {userData._id && <CreatePost/>}
+            {userData._id && userData.username === username && <CreatePost/>}
         </>
     )
 }

@@ -31,7 +31,6 @@ export default function HomePage() {
 
         setFeedPosts()
     }, [])
-    console.log(posts);
     
     return (
         <>
