@@ -9,7 +9,7 @@ export default function Comment({reply, lastReply}) {
             <Flex gap={4} py={2} my={2} w={"full"}>
                 <Avatar.Root size={"sm"} >
                     <Avatar.Fallback name={reply.username} />
-                    <Avatar.Image src={reply.profilePic} />
+                    <Avatar.Image src={reply.userProfilePic} />
                 </Avatar.Root>
                 <Flex gap={1} w={"full"} flexDirection={"column"}>
                     <Flex w={"full"} justifyContent={"space-between"} alignItems={"center"}>

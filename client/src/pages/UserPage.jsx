@@ -15,7 +15,7 @@ import { useUserContext } from "../contexts/UserContext";
 export default function UserPage() {
     const { username } = useParams();
     const showToast = useShowToast();
-    const {posts, setPosts} = usePostContext()
+    const {posts, setPosts, postsDataHandler} = usePostContext()
     const [fetchPosts, setFetchPosts] = useState(true)
     const {user, loading} = useGetUserProfile();
     const {userData} = useUserContext()
@@ -26,6 +26,7 @@ export default function UserPage() {
 
         const getPosts = async () => {
             setFetchPosts(true)
+            postsDataHandler([]);
 
             try {
                 const res = await fetch(`/api/posts/user/${username}`);

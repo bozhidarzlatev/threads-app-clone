@@ -22,7 +22,7 @@ const useGetUserProfile = () => {
 
                 setUser(data)
             } catch (error) {
-                showToast(false, data.error)
+                showToast(false, error)
 
             } finally {
                 setLoading(false)

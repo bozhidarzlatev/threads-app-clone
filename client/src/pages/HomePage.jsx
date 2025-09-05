@@ -7,12 +7,13 @@ import { usePostContext } from "../contexts/PostsContex";
 export default function HomePage() {
     const showToast = useShowToast();
     const [loading, setLoading] = useState(true);
-    const {posts, setPosts} = usePostContext();
+    const {posts, setPosts, postsDataHandler} = usePostContext();
 
 
     useEffect(() => {
         setLoading(true);
         const setFeedPosts = async () => {
+            postsDataHandler([])
             try {
                 const res = await fetch("/api/posts/feed/get");
                 const data = await res.json();

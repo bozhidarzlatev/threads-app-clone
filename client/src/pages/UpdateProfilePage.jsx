@@ -65,11 +65,10 @@ export default function UpdateProfilePage() {
             }
 
             if (data) {
-                
                 const usrData = {  _id: data.user._id , bio: data.user.bio, email: data.user.email,  name: data.user.name, profilePic: data.user.profilePic, username: data.user.username}
                 userDataHandler(usrData)
                 showToast(true, "Profile successfully updated");
-                navigate("/")
+                navigate(`/${data.user.username}`)
             }
 
         } catch (error) {

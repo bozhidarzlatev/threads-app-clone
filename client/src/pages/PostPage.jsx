@@ -22,10 +22,10 @@ export default function PostPage() {
     const navigate= useNavigate() 
 
     const currentPost = posts[0]
-
-        useEffect(() => {
-
+    useEffect(() => {
+        
         const getPosts = async () => {
+            postsDataHandler([])
 
             try {
                 const res = await fetch(`/api/posts/${pid}`)
