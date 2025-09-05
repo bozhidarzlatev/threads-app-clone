@@ -62,8 +62,8 @@ export default function Header() {
                 <Image
                     cursor={"pointer"}
                     alt='logo'
-                    w={10}
-                    src={colorMode === "dark" ? "/light-logo.svg" : "dark-logo.svg"}
+                    w={8}
+                    src={colorMode === "dark" ? "logo_light.png" : "logo_dark.png"}
                     onClick={toggleColorMode}
                 />
                 {userData._id ? (
