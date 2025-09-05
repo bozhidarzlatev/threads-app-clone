@@ -5,13 +5,14 @@ import { useUserContext } from "../../contexts/UserContext";
 import { IoIosAdd } from "react-icons/io";
 import { FormControl } from "@chakra-ui/form-control";
 import { BsFillImageFill } from "react-icons/bs";
+import { usePostContext } from "../../contexts/PostsContex";
 
 
-export default function Actions({ post: post_ }) {
+export default function Actions({ post }) {
     const { userData } = useUserContext();
-    const [liked, setLiked] = useState(post_?.likes?.includes(userData?._id));
+    const [liked, setLiked] = useState(post?.likes?.includes(userData?._id));
     const showToast = useShowToast();
-    const [post, setPost] = useState(post_);
+    const { posts, postsDataHandler } = usePostContext();
     const [isLiking, setIsLiking] = useState(false);
     const [isReplying, setReplying] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -39,10 +40,25 @@ export default function Actions({ post: post_ }) {
             }
 
             if (!liked) {
-                setPost({ ...post, likes: [...post.likes, userData._id] })
+                const updatedPosts = posts.map((p) => {
+                    if (p._id === post._id) {
+                        return { ...p, likes: [...p.likes, userData._id] }
+                    }
+                    return p
+                })
+                postsDataHandler(updatedPosts)
             } else {
-                setPost({ ...post, likes: post.likes.filter(id => id !== userData._id) })
+
+                const updatedPosts = posts.map((p) => {
+                    if (p._id === post._id) {
+                        return { ...p, likes: p.likes.filter(id => id !== userData._id) }
+                    }
+                    return p
+                })
+                postsDataHandler(updatedPosts)
             }
+
+
             setLiked(!liked)
             showToast(true, data.message)
         } catch (error) {
@@ -75,10 +91,18 @@ export default function Actions({ post: post_ }) {
             })
 
             const data = await res.json();
-            console.log(data);
 
-            if (data.error) return showToast(false, data.error)
-            setPost({ ...post, replies: [...post.replies, data.reply] })
+            if (data.error) return showToast(false, data.error);
+
+            const updatedReply = posts.map((p) => {
+                if(p._id === post._id) {
+                    return { ...p, replies: [...data.post.replies] }
+
+                }
+                return p
+            })
+
+            postsDataHandler(updatedReply);
             setReply("");
             setIsOpen(false)
             showToast(true, "Reply successfully!")
@@ -93,7 +117,6 @@ export default function Actions({ post: post_ }) {
         <Flex gap={1} direction={"column"}>
             <Flex gap={3} my={2} onClick={(e) => e.preventDefault()}>
                 <svg
-                    cursor={"pointer"}
                     aria-label='Like'
                     color={liked ? "rgb(237, 73, 86)" : ""}
                     fill={liked ? "rgb(237, 73, 86)" : "transparent"}
@@ -111,7 +134,6 @@ export default function Actions({ post: post_ }) {
                 </svg>
 
                 <svg
-                    cursor={"pointer"}
                     aria-label='Comment'
                     color=''
                     fill=''
@@ -146,17 +168,7 @@ export default function Actions({ post: post_ }) {
                 open={isOpen} onOpenChange={(e) => setIsOpen(e.open)}
                 position={'fixed'} bottom={30}>
 
-                <Dialog.Trigger asChild>
-                    <Button
-                        loading={false}
-                        position={'fixed'}
-                        bottom={10}
-                        right={10}
-                        size="sm">
-                        <IoIosAdd />
-                        Post
-                    </Button>
-                </Dialog.Trigger>
+
                 <Portal>
                     <Dialog.Backdrop />
                     <Dialog.Positioner>
@@ -198,7 +210,6 @@ const RepostSvg = () => {
 
     return (
         <svg
-            cursor={"pointer"}
             aria-label='Repost'
             color='currentColor'
             fill='currentColor'
@@ -219,7 +230,6 @@ const RepostSvg = () => {
 const ShareSvg = () => {
     return (
         <svg
-            cursor={"pointer"}
             aria-label='Share'
             color=''
             fill='rgb(243, 245, 247)'

@@ -10,14 +10,18 @@ import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
 import { formatDistance } from "date-fns";
 import { useUserContext } from "../contexts/UserContext";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { usePostContext } from "../contexts/PostsContex";
 
 export default function PostPage() {
     const {user, loading} = useGetUserProfile();
-    const [post, setPosts] = useState(null)
+    const [post, setPost] = useState("")
+    const {posts, setPosts, postsDataHandler} = usePostContext()
     const showToast = useShowToast();
     const {pid} = useParams()
     const {userData} = useUserContext()
     const navigate= useNavigate() 
+
+    const currentPost = posts[0]
 
         useEffect(() => {
 
@@ -33,7 +37,7 @@ export default function PostPage() {
                 }
                 console.log(data);
                 
-                setPosts(data)
+                postsDataHandler([data])
             } catch (error) {
                 showToast(false, error)
             }
@@ -49,7 +53,7 @@ export default function PostPage() {
 
             if(!window.confirm("Are you sure you want to delete tihis post")) return;
 
-            const res = await fetch(`/api/posts/delete/${post._id}`, {
+            const res = await fetch(`/api/posts/delete/${currentPost}`, {
                 method:"DELETE"
             });
             const data = await res.json();
@@ -69,7 +73,7 @@ export default function PostPage() {
         return <LoadingSpinner/>
     }
 
-    if(!post) return null
+    if(!currentPost) return null
 
     return (
         <>
@@ -86,23 +90,23 @@ export default function PostPage() {
                     </Flex>
                 </Flex>
                       <Flex gap={4} alignItems={"center"}>
-                            <Text fontSize={"sm"} width={36} textAlign={"right"} color={"gray.400"}>{formatDistance( new Date(post.createdAt), new Date() , {addSuffix: true})}</Text>
+                            <Text fontSize={"sm"} width={36} textAlign={"right"} color={"gray.400"}>{formatDistance( new Date(currentPost.createdAt), new Date() , {addSuffix: true})}</Text>
                             {userData?._id === user?._id &&
                                 <RiDeleteBin6Line cursor={"pointer" } onClick={handleOnDelete} size={20}/>
                             }
                         </Flex>
             </Flex>
-            <Text my={3}>{post.text}</Text>
+            <Text my={3}>{currentPost.text}</Text>
             <Box
                 borderRadius={6}
                 overflow="hidden"
                 border="1px solid"
                 borderColor="gray.500"
             >
-                <Image src={post.img} w={"full"}></Image>
+                <Image src={currentPost.img} w={"full"}></Image>
             </Box>
             <Flex gap={3} my={3}>
-                <Actions post={post} />
+                <Actions post={currentPost} />
             </Flex>
             {/* <Flex gap={2} alignItems={"center"}>
                 <Text color={"gray.400"} fontSize={"sm"}>238 replies</Text>
@@ -116,7 +120,7 @@ export default function PostPage() {
             <Flex justifyContent={"space-between"}>
                 <Flex gap={2} alignItems={"center"}>
                     <Text fontSize={"2xl"}>👋</Text>
-                    <Text color={"gray.400"}>Get the app to like, reply and post.</Text>
+                    <Text color={"gray.400"}>Get the app to like, reply and posts.</Text>
 
                 </Flex>
                 <Button background={"gray.400"}>
@@ -125,9 +129,9 @@ export default function PostPage() {
 
             </Flex>
             <Separator my={4} />
-                {post.replies.map((reply)=> (
+                {currentPost.replies.map((reply)=> (
                     <Comment key={reply._id} reply={reply} 
-                    lastReply = {reply._id === post.replies[post.replies.length -1]._id}
+                    lastReply = {reply._id === currentPost.replies[currentPost.replies.length -1]._id}
                     />
 
                 ))}

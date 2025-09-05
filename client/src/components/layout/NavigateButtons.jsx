@@ -77,7 +77,6 @@ export default function NavigateButtons() {
             )
             }
 
-{userData._id && <CreatePost/>}
         </>
     )
 }

@@ -11,6 +11,7 @@ import { useRef } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 import { useUserContext } from "../../contexts/UserContext";
 import useShowToast from "../../hooks/useShowToast";
+import { usePostContext } from "../../contexts/PostsContex";
 
 const MAX_CHAR = 500
 
@@ -22,7 +23,8 @@ export default function CreatePost() {
     const { userData } = useUserContext();
     const showToast = useShowToast();
     const [isOpen, setIsOpen] = useState(false);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const {posts, postsDataHandler} = usePostContext()
 
     const handleTextChange = (e) => {
         const inputText = e.target.value;
@@ -56,10 +58,12 @@ export default function CreatePost() {
                 return
             }
 
+            
+            postsDataHandler([data.newPost, ...posts])
             setPostText("");
             setImgUrl("");
-            showToast(true, "Post successfully crearted!");
             setIsOpen(false);
+            showToast(true, "Post successfully crearted!");
         } catch (error) {
             showToast(false, error);
         } finally {
@@ -71,8 +75,6 @@ export default function CreatePost() {
 
     return (
         <>
-
-
             <Dialog.Root
                 open={isOpen} onOpenChange={(e) => setIsOpen(e.open)}
                 position={'fixed'} bottom={30}>
@@ -92,7 +94,6 @@ export default function CreatePost() {
                     <Dialog.Backdrop />
                     <Dialog.Positioner>
                         <Dialog.Content
-
                         >
                             <Dialog.Header>
                                 <Dialog.Title>Create Post</Dialog.Title>

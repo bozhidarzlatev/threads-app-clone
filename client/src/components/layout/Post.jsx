@@ -6,12 +6,14 @@ import useShowToast from "../../hooks/useShowToast";
 import { formatDistance } from "date-fns"
 import { RiDeleteBin6Line  } from "react-icons/ri";
 import { useUserContext } from "../../contexts/UserContext";
+import { usePostContext } from "../../contexts/PostsContex";
 
-export default function Post({ post, postedBy }) {
+export default function Post({ post, postedBy, setPosts }) {
     const [user, setUser] = useState(null)
     const showToast = useShowToast();
     const navigate = useNavigate()
     const {userData} = useUserContext()
+    const {posts, postsDataHandler } = usePostContext()
 
     useEffect(() => {
         const getUser = async () => {
@@ -50,7 +52,8 @@ export default function Post({ post, postedBy }) {
                 showToast(false, data.error);
                 return
             }
-
+            
+            postsDataHandler(posts.filter((p) => p._id !== post._id))
             showToast(true, "Post deleted!")
 
         } catch (error) {
@@ -136,7 +139,7 @@ export default function Post({ post, postedBy }) {
                     }
 
                     <Flex gap={3} my={1}>
-                        <Actions post={post}></Actions>
+                        <Actions post={post} ></Actions>
                     </Flex>
 
 

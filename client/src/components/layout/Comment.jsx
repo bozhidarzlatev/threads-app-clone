@@ -4,7 +4,6 @@ import { BsThreeDots } from "react-icons/bs"
 import Actions from "./Actions"
 
 export default function Comment({reply, lastReply}) {
-    const [liked, setLiked] = useState(false)
     return (
         <>
             <Flex gap={4} py={2} my={2} w={"full"}>

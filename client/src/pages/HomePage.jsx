@@ -2,11 +2,12 @@ import {  Flex, Spinner, useStatStyles } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import Post from "../components/layout/Post";
+import { usePostContext } from "../contexts/PostsContex";
 
 export default function HomePage() {
     const showToast = useShowToast();
     const [loading, setLoading] = useState(true);
-    const [posts, setPosts] = useState([]);
+    const {posts, setPosts} = usePostContext();
 
 
     useEffect(() => {
