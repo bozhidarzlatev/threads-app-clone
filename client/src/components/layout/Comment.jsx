@@ -3,34 +3,26 @@ import { useState } from "react"
 import { BsThreeDots } from "react-icons/bs"
 import Actions from "./Actions"
 
-export default function Comment(data) {
+export default function Comment({reply, lastReply}) {
     const [liked, setLiked] = useState(false)
     return (
         <>
             <Flex gap={4} py={2} my={2} w={"full"}>
                 <Avatar.Root size={"sm"} >
-                    <Avatar.Fallback name="Mark Zukerberg" />
-                    <Avatar.Image src={data.userAvatar} />
+                    <Avatar.Fallback name={reply.username} />
+                    <Avatar.Image src={reply.profilePic} />
                 </Avatar.Root>
                 <Flex gap={1} w={"full"} flexDirection={"column"}>
                     <Flex w={"full"} justifyContent={"space-between"} alignItems={"center"}>
-                        <Text fontSize={"sm"} fontWeight={"bold"}>{data.username}</Text>
+                        <Text fontSize={"sm"} fontWeight={"bold"}>{reply.username}</Text>
 
-                        <Flex gap={2} alignItems={"center"}>
-                            <Text fontSize={"sm"} color={"gray.400"}>{data.createdAt}</Text>
-                            <BsThreeDots />
-
-                        </Flex>
                     </Flex>
-                    <Text>{data.comment}</Text>
-                    <Actions liked={liked} setLiked={setLiked} />
-                    <text fontSize={"sm"} color="gray.400">
-                        {data.likes + (liked ? 1: 0)} likes
-                    </text>
+                    <Text>{reply.text}</Text>
+
                 </Flex>
 
             </Flex>
-            <Separator/>
+            {!lastReply && <Separator/> }
         </>
     )
 }

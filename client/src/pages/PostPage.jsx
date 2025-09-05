@@ -1,50 +1,116 @@
 import { Text, Avatar, Flex, Image, Box, Separator, Button  } from "@chakra-ui/react";
 import { BsThreeDots } from "react-icons/bs";
 import Actions from "../components/layout/Actions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Comment from "../components/layout/Comment";
+import useShowToast from "../hooks/useShowToast";
+import useGetUserProfile from "../hooks/useGetUserProfile";
+import LoadingSpinner from "../components/layout/LoadingSpinner";
+import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
+import { formatDistance } from "date-fns";
+import { useUserContext } from "../contexts/UserContext";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 export default function PostPage() {
-        const [liked, setLiked] = useState(false)
+    const {user, loading} = useGetUserProfile();
+    const [post, setPosts] = useState(null)
+    const showToast = useShowToast();
+    const {pid} = useParams()
+    const {userData} = useUserContext()
+    const navigate= useNavigate() 
+
+        useEffect(() => {
+
+        const getPosts = async () => {
+
+            try {
+                const res = await fetch(`/api/posts/${pid}`)
+                const data = await res.json();
+
+                if(data.error) {
+                    showToast(false,data.error)
+                    return
+                }
+                console.log(data);
+                
+                setPosts(data)
+            } catch (error) {
+                showToast(false, error)
+            }
+
+        }
+
+        getPosts()
+    }, [pid])
+
+        const handleOnDelete = async (e) => {
+        try {
+            e.preventDefault();
+
+            if(!window.confirm("Are you sure you want to delete tihis post")) return;
+
+            const res = await fetch(`/api/posts/delete/${post._id}`, {
+                method:"DELETE"
+            });
+            const data = await res.json();
+            if(data.error) {
+                showToast(false, data.error);
+                return
+            }
+
+            showToast(true, "Post deleted!")
+            navigate(`/${user.username}`)
+        } catch (error) {
+            showToast(false, error)
+        }
+    } 
+
+    if(!user && loading) {
+        return <LoadingSpinner/>
+    }
+
+    if(!post) return null
+
     return (
         <>
             <Flex>
                 <Flex w={"full"} alignItems={"center"} gap={3}>
                     <Avatar.Root size={"md"} >
-                        <Avatar.Fallback name="Mark Zukerberg" />
-                        <Avatar.Image src="/zuck-avatar.png" />
+                        <Avatar.Fallback name={user.name} />
+                        <Avatar.Image src={user.profilePic} />
                     </Avatar.Root>
                     <Flex>
-                        <Text fontSize={"sm"} fontWeight={"bold"} >markzuckerberg</Text>
+                        <Text fontSize={"sm"} fontWeight={"bold"} >{user.username}</Text>
                         <Image src="/verified.png" h={4} ml={1}></Image>
 
                     </Flex>
                 </Flex>
-                <Flex gap={4} alignItems={"center"}>
-                    <Text fontSize={"sm"} color={"gray.400"}>1d</Text>
-                    <BsThreeDots />
-
-                </Flex>
+                      <Flex gap={4} alignItems={"center"}>
+                            <Text fontSize={"sm"} width={36} textAlign={"right"} color={"gray.400"}>{formatDistance( new Date(post.createdAt), new Date() , {addSuffix: true})}</Text>
+                            {userData?._id === user?._id &&
+                                <RiDeleteBin6Line cursor={"pointer" } onClick={handleOnDelete} size={20}/>
+                            }
+                        </Flex>
             </Flex>
-            <Text my={3}>Let's talk about Threads</Text>
+            <Text my={3}>{post.text}</Text>
             <Box
                 borderRadius={6}
                 overflow="hidden"
                 border="1px solid"
                 borderColor="gray.500"
             >
-                <Image src={"/post1.png"} w={"full"}></Image>
+                <Image src={post.img} w={"full"}></Image>
             </Box>
             <Flex gap={3} my={3}>
-                <Actions liked={liked} setLiked={setLiked}  />
+                <Actions post={post} />
             </Flex>
-            <Flex gap={2} alignItems={"center"}>
+            {/* <Flex gap={2} alignItems={"center"}>
                 <Text color={"gray.400"} fontSize={"sm"}>238 replies</Text>
                 <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.400"}></Box>
                 <Text color={"gray.400"} fontSize={"sm"}>
-                    {1267 + (liked ? 1 : 0)} likes
+                    1267 likes
                     </Text>
-            </Flex>
+            </Flex> */}
             <Separator my={4} />
 
             <Flex justifyContent={"space-between"}>
@@ -59,9 +125,12 @@ export default function PostPage() {
 
             </Flex>
             <Separator my={4} />
-            <Comment comment="Looks really good" createdAt="2d" likes={69} username="jondoe" userAvatar="https://cdn.myanimelist.net/r/84x124/images/characters/9/131317.webp?s=d4b03c7291407bde303bc0758047f6bd"/>
-            <Comment comment="The best app" createdAt="1d" likes={27} username="mamacita" userAvatar="https://cdn.myanimelist.net/r/84x124/images/characters/7/284129.webp?s=a8998bf668767de58b33740886ca571c"/>
-            <Comment comment="very nice experiance" createdAt="3d" likes={156} username="zoe468" userAvatar="https://cdn.myanimelist.net/r/84x124/images/characters/9/105421.webp?s=269ff1b2bb9abe3ac1bc443d3a76e863"/>
+                {post.replies.map((reply)=> (
+                    <Comment key={reply._id} reply={reply} 
+                    lastReply = {reply._id === post.replies[post.replies.length -1]._id}
+                    />
+
+                ))}
         </>
     )
 }

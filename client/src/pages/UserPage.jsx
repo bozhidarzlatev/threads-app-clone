@@ -6,34 +6,19 @@ import { data, useParams } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
 import { Flex, Spinner } from "@chakra-ui/react";
 import Post from "../components/layout/Post";
+import useGetUserProfile from "../hooks/useGetUserProfile";
+import LoadingSpinner from "../components/layout/LoadingSpinner";
 
 export default function UserPage() {
-    const [user, setUser] = useState(null);
     const { username } = useParams();
     const showToast = useShowToast();
-    const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState([]);
     const [fetchPosts, setFetchPosts] = useState(true)
+    const {user, loading} = useGetUserProfile()
+
 
     useEffect(() => {
-        const getUser = async () => {
-            try {
-                const res = await fetch(`/api/users/profile/${username}`);
-                const data = await res.json();
-                console.log(data);
-                if (data.error) {
-                    showToast(false, data.error)
-                    return;
-                };
 
-                setUser(data)
-            } catch (error) {
-                showToast(false, data.error)
-
-            } finally {
-                setLoading(false)
-            }
-        }
 
         const getPosts = async () => {
             setFetchPosts(true)
@@ -54,7 +39,6 @@ export default function UserPage() {
 
         }
 
-        getUser()
         getPosts()
     }, [username])
 
@@ -72,11 +56,8 @@ export default function UserPage() {
     return (
         <>
             <UserHeader user={user} />
-            {fetchPosts && (
-                <Flex justifyContent={"center"} my={20}>
-                    <Spinner size={"xl"} />
-                </Flex>
-            )}
+            {fetchPosts && <LoadingSpinner/>
+            }
 
             {!fetchPosts && posts.length === 0 && <h1>User has not posted yet!</h1> }
             {posts.map((post) => (
