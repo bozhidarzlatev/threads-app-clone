@@ -63,7 +63,7 @@ export default function Header() {
                     cursor={"pointer"}
                     alt='logo'
                     w={8}
-                    src={colorMode === "dark" ? "logo_light.png" : "logo_dark.png"}
+                    src={colorMode === "dark" ? "/logo_light.png" : "/logo_dark.png"}
                     onClick={toggleColorMode}
                 />
                 {userData._id ? (
