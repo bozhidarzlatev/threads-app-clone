@@ -4,11 +4,14 @@ import Actions from "./Actions";
 import { useEffect, useState } from "react";
 import useShowToast from "../../hooks/useShowToast";
 import { formatDistance } from "date-fns"
+import { RiDeleteBin6Line  } from "react-icons/ri";
+import { useUserContext } from "../../contexts/UserContext";
 
 export default function Post({ post, postedBy }) {
     const [user, setUser] = useState(null)
     const showToast = useShowToast();
     const navigate = useNavigate()
+    const {userData} = useUserContext()
 
     useEffect(() => {
         const getUser = async () => {
@@ -32,6 +35,28 @@ export default function Post({ post, postedBy }) {
 
         getUser()
     }, [postedBy])
+
+    const handleOnDelete = async (e) => {
+        try {
+            e.preventDefault();
+
+            if(!window.confirm("Are you sure you want to delete tihis post")) return;
+
+            const res = await fetch(`/api/posts/delete/${post._id}`, {
+                method:"DELETE"
+            });
+            const data = await res.json();
+            if(data.error) {
+                showToast(false, data.error);
+                return
+            }
+
+            showToast(true, "Post deleted!")
+
+        } catch (error) {
+            showToast(false, error)
+        }
+    }
 
     return (
 
@@ -89,9 +114,12 @@ export default function Post({ post, postedBy }) {
                         </Flex>
                         <Flex gap={4} alignItems={"center"}>
                             <Text fontSize={"sm"} width={36} textAlign={"right"} color={"gray.400"}>{formatDistance( new Date(post.createdAt), new Date() , {addSuffix: true})}</Text>
-
+                            {userData?._id === user?._id &&
+                                <RiDeleteBin6Line onClick={handleOnDelete} size={20}/>
+                            }
                         </Flex>
                     </Flex>
+
                     <Text fontSize={"sm"}>{post.text}</Text>
                     {post.img && (
 

@@ -59,6 +59,11 @@ const deletePost = async (req, res) => {
 
         }
 
+        if(post.img) {
+            const imgId = post.img.split("/").pop().split(".")[0];
+            await cloudinary.uploader.destroy(imgId)
+        }
+
         await Post.findByIdAndDelete(req.params.postId)
         res.status(200).json({ message: "Post deleted successfully!" })
 
@@ -146,23 +151,41 @@ const replyPost = async (req, res) => {
 }
 
 const getFeedPost = async (req, res) => {
-    
+
     try {
         const userId = req.user._id;
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ error: `User not found!` })
         }
-        
+
         const following = user.following;
         const feedPosts = await Post.find({ postedBy: { $in: following } }).sort({ createdAt: -1 });
 
         res.status(200).json(feedPosts)
-
+        
     } catch (error) {
         res.status(500).json({ error: error.message })
         console.log(`Error in replyPost : `, error.message);
     }
+}
+
+const getUserPosts = async (req, res) => {
+    const { username} = req.params
+    try {
+        const user = await User.findOne({username});
+        if(!user) { 
+            return  res.status(404).json({ error: "User not found!" })
+        }
+
+        const posts = await Post.find({postedBy: user._id}).sort({createdAt: -1})
+        res.status(200).json(posts)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+        console.log(`Error in getUserPosts : `, error.message);
+
+    }
+
 }
 
 export const postController = {
@@ -171,5 +194,6 @@ export const postController = {
     deletePost,
     likeUnlikePost,
     replyPost,
-    getFeedPost
+    getFeedPost,
+    getUserPosts
 }
