@@ -1,5 +1,6 @@
 import { Avatar, Flex, Image, Skeleton, SkeletonCircle, Text } from "@chakra-ui/react";
 import { Separator } from "@chakra-ui/react"
+import Message from "./Message";
 
 
 export default function MessageContainer() {
@@ -23,8 +24,9 @@ export default function MessageContainer() {
             </Flex>
             <Separator color={"red.200"} />
             <Flex flexDir={"column"} gap={4} my={4}
+            p={2}
             height={"400px"} 
-            overflowY={"scroll"}
+            overflowY={"auto"}
             >
                 {true && (
                     [...Array(5)].map((_, i) => (
@@ -47,6 +49,10 @@ export default function MessageContainer() {
 
                     ))
                 )}
+
+                <Message ownMessage={true} />
+                <Message ownMessage={false} />
+                <Message ownMessage={true} />
             </Flex>
         </Flex>
     )
