@@ -6,6 +6,7 @@ import { Avatar, Button, Flex, Image } from "@chakra-ui/react";
 import useShowToast from "../../hooks/useShowToast";
 import { FiLogOut, FiLogIn } from "react-icons/fi";
 import { GrUserNew } from "react-icons/gr";
+import { BsFillChatQuoteFill } from "react-icons/bs";
 
 export default function Header() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -78,6 +79,17 @@ export default function Header() {
                                 <Avatar.Fallback name={userData.name} />
                                 <Avatar.Image src={userData.profilePic} />
                             </Avatar.Root>
+                        </Link>
+                        <Link to={`/chat`}>
+                            <Button
+                            borderRadius={"full"}
+                            w={10}
+                            h={10}
+                            bg={"red.200"}
+                            size={"sm"}
+                           >
+                            <BsFillChatQuoteFill size={24} />
+                        </Button>
                         </Link>
                         <Button
                             borderRadius={"full"}

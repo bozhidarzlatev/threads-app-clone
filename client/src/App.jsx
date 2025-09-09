@@ -1,4 +1,4 @@
-import { Container } from "@chakra-ui/react"
+import { Box, Container } from "@chakra-ui/react"
 import { Route, Routes } from "react-router-dom"
 import PostPage from "./pages/PostPage"
 import Header from "./components/layout/Header"
@@ -11,6 +11,7 @@ import UpdateProfilePage from "./pages/UpdateProfilePage"
 import UserProvider from "./providers/UserProvider"
 import NavigateButtons from "./components/layout/NavigateButtons"
 import PostProvider from "./providers/PostProvider"
+import ChatPage from "./pages/ChatPage"
 
 function App() {
 
@@ -21,19 +22,23 @@ function App() {
 
 
           <Toaster />
-          <Container maxW="620px">
-            <Header />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/auth/signup" element={<SignupCard />} />
-              <Route path="/auth/login" element={<LoginCard />} />
-              <Route path="/auth/update" element={<UpdateProfilePage />} />
-              <Route path="/:username" element={<UserPage />} />
-              <Route path="/:username/post/:pid" element={<PostPage />} />
-            </Routes>
+          <Box position={"relative"} w={"full"}>
 
-          </Container>
-          <NavigateButtons />
+            <Container maxW="620px">
+              <Header />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/auth/signup" element={<SignupCard />} />
+                <Route path="/auth/login" element={<LoginCard />} />
+                <Route path="/auth/update" element={<UpdateProfilePage />} />
+                <Route path="/:username" element={<UserPage />} />
+                <Route path="/:username/post/:pid" element={<PostPage />} />
+                <Route path="/chat" element={<ChatPage />} />
+              </Routes>
+
+            </Container>
+            <NavigateButtons />
+          </Box>
         </PostProvider >
       </UserProvider>
 
