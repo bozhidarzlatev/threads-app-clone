@@ -1,6 +1,7 @@
 import { Avatar, Flex, Image, Skeleton, SkeletonCircle, Text } from "@chakra-ui/react";
 import { Separator } from "@chakra-ui/react"
 import Message from "./Message";
+import MessageInput from "./MessageInput";
 
 
 export default function MessageContainer() {
@@ -54,6 +55,7 @@ export default function MessageContainer() {
                 <Message ownMessage={false} />
                 <Message ownMessage={true} />
             </Flex>
+            <MessageInput />
         </Flex>
     )
 }
