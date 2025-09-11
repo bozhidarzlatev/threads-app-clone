@@ -7,7 +7,6 @@ const usePreviewimg = () => {
 
     const handleimageChange = (e) => {
         const file = e.target.files[0];
-        console.log(file);
         if(file.size > 2097152 ) {
             showToast(false, "Max image file size is 2mb");
             return

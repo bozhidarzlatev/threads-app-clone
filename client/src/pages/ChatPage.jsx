@@ -21,7 +21,6 @@ export default function ChatPage() {
 
 
     useEffect(() => {
-        console.log(conversations);
 
         const getConversations = async () => {
             try {
@@ -114,7 +113,7 @@ export default function ChatPage() {
             lest={"50%"}
             w={{
                 base: "100%",
-                md: "80%",
+                md: "100%",
                 lg: "750px"
             }}
             p={4}
@@ -132,7 +131,7 @@ export default function ChatPage() {
                 }}
                 mx={"auto"}
             >
-                <Flex flex={30}
+                <Flex flex={40}
                     p={2}
                     gap={2}
                     borderRadius={"md"}

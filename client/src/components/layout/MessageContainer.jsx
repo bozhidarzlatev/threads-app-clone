@@ -24,6 +24,8 @@ export default function MessageContainer() {
             setLoadingmessages(true)
 
             try {
+                
+                if(selectedConversations.mock) return;
                 const res = await fetch(`/api/messages/${encodeURIComponent(selectedConversations.userId)}`)
                 
                 const data = await res.json();
@@ -49,7 +51,6 @@ export default function MessageContainer() {
         getMessages();
     }, [selectedConversations])
 
-    console.log(selectedConversations);
     
     return (
         <Flex flex={"70"}
@@ -71,7 +72,8 @@ export default function MessageContainer() {
                 </Text>
             </Flex>
             <Separator color={"red.200"} />
-            <Flex flexDir={"column"} gap={4} my={4}
+            <Flex 
+            flex={1} flexDir={"column"} gap={4} my={4}
                 p={2}
                 height={"400px"}
                 overflowY={"auto"}

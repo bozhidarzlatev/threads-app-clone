@@ -11,7 +11,7 @@ import { useState } from "react";
 
 export default function MessageInput({ setMessages }) {
   const [messageText, setMessageText] = useState("");
-  const { selectedConversations, selectedConversationsDataHandler , conversations, conversationsDataHandler} = useMessageContext()
+  const { selectedConversations, selectedConversationsDataHandler, conversations, conversationsDataHandler } = useMessageContext()
   const showToast = useShowToast()
 
   const handleSendMessage = async (e) => {
@@ -39,7 +39,7 @@ export default function MessageInput({ setMessages }) {
       }
 
       setMessages((prev) => [...prev, data])
-      
+
       conversationsDataHandler(prev => {
         const updConv = prev.map(conversation => {
           if (conversation._id === selectedConversations._id) {
@@ -53,19 +53,20 @@ export default function MessageInput({ setMessages }) {
           }
           return conversation
         })
-        
+
         return updConv;
       })
-      
+
       setMessageText("")
     } catch (error) {
       showToast(false, error.message)
     }
-    
+
   }
 
   return (
-    <form style={{ width: "100%" }} onSubmit={handleSendMessage}>
+    <form 
+     style={{ width: "100%" }} onSubmit={handleSendMessage}>
       <InputGroup w="100%">
         <Input
           w="100%"

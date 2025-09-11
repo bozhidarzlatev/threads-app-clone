@@ -35,7 +35,6 @@ export default function PostPage() {
                     showToast(false,data.error)
                     return
                 }
-                console.log(data);
                 
                 postsDataHandler([data])
             } catch (error) {

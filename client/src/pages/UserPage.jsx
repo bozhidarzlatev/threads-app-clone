@@ -41,7 +41,6 @@ export default function UserPage() {
 
         getPosts()
     }, [username])
-    console.log(posts);
     
     if (!user && loading) {
         return (

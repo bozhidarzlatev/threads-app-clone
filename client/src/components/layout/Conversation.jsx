@@ -11,8 +11,6 @@ export default function Conversation({ conversation }) {
     const { selectedConversations, selectedConversationsDataHandler } = useMessageContext()
     const user = conversation.participants[0];
     const lastMessage = conversation.lastMessage;
-    console.log(`conv id`, user._id);
-
 
     return (
         <Flex
@@ -28,7 +26,8 @@ export default function Conversation({ conversation }) {
                 _id: conversation._id,
                 userId: user._id,
                 userProfilePic: user.profilePic,
-                username: user.username
+                username: user.username,
+                mock: conversation.mock
             })}
             bg={selectedConversations?._id === conversation._id ? "green.500" : ""}
             borderRadius={"md"}

@@ -186,7 +186,7 @@ const updateUser = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
     const { query } = req.params;
-    console.log(`tuk`, query);
+    console.log( query);
     
     try {
         let user;

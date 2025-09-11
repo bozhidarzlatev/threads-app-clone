@@ -29,3 +29,5 @@ Additionally, the app uses:
 - [X] Set up MongoDB
 - [X] Implement Authenticatin
 - [ ] Implement post Functionalities
+
+
