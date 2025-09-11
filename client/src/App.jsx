@@ -12,6 +12,7 @@ import UserProvider from "./providers/UserProvider"
 import NavigateButtons from "./components/layout/NavigateButtons"
 import PostProvider from "./providers/PostProvider"
 import ChatPage from "./pages/ChatPage"
+import MessageProvider from "./providers/MessageProvider"
 
 function App() {
 
@@ -19,6 +20,8 @@ function App() {
     <>
       <UserProvider>
         <PostProvider>
+          <MessageProvider>
+
 
 
           <Toaster />
@@ -39,6 +42,9 @@ function App() {
             </Container>
             <NavigateButtons />
           </Box>
+
+          </MessageProvider>
+
         </PostProvider >
       </UserProvider>
 

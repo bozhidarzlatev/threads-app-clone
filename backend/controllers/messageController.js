@@ -1,8 +1,7 @@
-import Message from "../models/messageModel";
-import Conversation from "../models/conversationModel ";
+import Conversation from "../models/conversationModel .js";
+import Message from "../models/messageModel.js";
 
 const sentMessage = async (req, res) => {
-    console.log(`hi`);
 
     try {
         const { recipientId, message } = req.body;
@@ -74,9 +73,7 @@ const getMessages = async (req, res) => {
 
 const getConversations = async (req, res) => {
     const userId = req.user._id;
-    
     try {
-
         const conversations = await Conversation.find({
             participants: userId
         }).populate({
@@ -84,6 +81,12 @@ const getConversations = async (req, res) => {
             select: "username profilePic"
         });
 
+        conversations.forEach(conversation => {
+            conversation,participants = conversation.participants.filter(
+                participant => participant._id.toString() !== userId.toString()
+            )
+        })
+        
         res.status(200).json(conversations);
     } catch (error) {
         res.status(500).json({ errod: error.message })
