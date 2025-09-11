@@ -7,11 +7,10 @@ import { useMessageContext } from "../../contexts/MessageContex";
 
 export default function Conversation({conversation}) {
     const {userData} = useUserContext();
-    const {selectedConversations, setselectedConversationst} = useMessageContext()
+    const {selectedConversations, selectedConversationsDataHandler} = useMessageContext()
     const user = conversation.participants[0];
     const lastMessage = conversation.lastMessage;
 
-        console.log(selectedConversations);
         
     return (
         <Flex
@@ -22,13 +21,13 @@ export default function Conversation({conversation}) {
                 cursor: "pointer",
                 coolor: "white"
             }}
-            onClick={() => setselectedConversationst({
-                _id: conversation._id,
+            onClick={() => selectedConversationsDataHandler({
+                _id: user._id,
                 userId: user._id,
                 userProfilePic: user.profilePic,
                 username: user.username
             }) }
-            bg={selectedConversations?._id === conversation._id ? "gray.200" : "blue.200"}
+            bg={selectedConversations?._id === user._id ? "green.500" : ""}
             borderRadius={"md"}
         >
             <WrapItem >

@@ -10,24 +10,24 @@ import { useMessageContext } from "../../contexts/MessageContex";
 import { useState } from "react";
 
 export default function MessageInput({ setMessages }) {
-  const [messsageText, setMessageText] = useState("");
-  const { selectedConversations, selectedConversationsDataHandler } = useMessageContext()
+  const [messageText, setMessageText] = useState("");
+  const { selectedConversations, selectedConversationsDataHandler , conversations, conversationsDataHandler} = useMessageContext()
   const showToast = useShowToast()
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
 
-    if (!messsageText) return;
+    if (!messageText) return;
 
     try {
       const res = await fetch("/api/messages", {
         method: "POST",
         headers: {
-          "Content-Type": "applications/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: messsageText,
-          recipiantId: selectedConversations.userId
+          message: messageText,
+          recipientId: selectedConversations.userId
         })
       });
 
@@ -39,28 +39,32 @@ export default function MessageInput({ setMessages }) {
       }
 
       setMessages((prev) => [...prev, data])
-
-      selectedConversationsDataHandler(prev => {
+      console.log(1, conversations);
+      
+      conversationsDataHandler(prev => {
         const updConv = prev.map(conversation => {
           if (conversation._id === selectedConversations._id) {
             return {
               ...conversation,
               lastMessage: {
-                text: messsageText,
+                text: messageText,
                 sender: data.sender
               }
             }
           }
+          
           return conversation
         })
+        
+        console.log(2, conversations);
         return updConv;
       })
-
+      
       setMessageText("")
     } catch (error) {
       showToast(false, error.message)
     }
-
+    
   }
 
   return (
@@ -71,7 +75,7 @@ export default function MessageInput({ setMessages }) {
           placeholder="Type a message"
           pr="3rem"
           onChange={(e) => setMessageText(e.target.value)}
-          value={messsageText}
+          value={messageText}
         />
         <InputRightElement onClick={handleSendMessage} cursor={"pointer"}>
           <IoIosSend size={20} />

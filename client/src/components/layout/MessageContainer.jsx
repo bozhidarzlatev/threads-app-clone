@@ -17,12 +17,13 @@ export default function MessageContainer() {
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
-        const setMessages = async () => {
+        const getMessages = async () => {
             setMessages([])
             setLoadingmessages(true)
 
             try {
-                const res = await fetch('/api/messages/${selectedConversations.userId}')
+                const res = await fetch(`/api/messages/${encodeURIComponent(selectedConversations.userId)}`)
+                
                 const data = await res.json();
 
                 if (data.error) {
@@ -31,18 +32,20 @@ export default function MessageContainer() {
                 }
 
                 setMessages(data);
-
+                
             } catch (error) {
                 showToast(false, error.message)
+                return
             } finally {
                 setLoadingmessages(false)
             }
 
+            
 
         }
 
-        setMessages();
-    }, [selectedConversations.userId])
+        getMessages();
+    }, [selectedConversations])
 
     return (
         <Flex flex={"70"}

@@ -22,8 +22,6 @@ export default function UserPage() {
 
 
     useEffect(() => {
-
-
         const getPosts = async () => {
             setFetchPosts(true)
             postsDataHandler([]);
@@ -31,7 +29,6 @@ export default function UserPage() {
             try {
                 const res = await fetch(`/api/posts/user/${username}`);
                 const data = await res.json();
-                console.log(data);
 
                 setPosts(data)
 

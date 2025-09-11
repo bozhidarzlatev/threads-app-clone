@@ -42,7 +42,7 @@ const sentMessage = async (req, res) => {
         res.status(201).json(newMessage)
 
     } catch (error) {
-        res.status(500).json({ errod: error.message })
+        res.status(500).json({ error: error.message })
 
     }
 
@@ -51,22 +51,26 @@ const sentMessage = async (req, res) => {
 const getMessages = async (req, res) => {
     const { otherUserId } = req.params;
     const userId = req.user._id
-
+ 
+    
     try {
         const conversation = await Conversation.findOne({
             participants: { $all: [userId, otherUserId] }
         })
+       
+        
 
         if (!conversation) {
-            return res.status(404).json({ errod: "Conversation not found!" })
+            return res.status(404).json({ error: "Conversation not found!" })
         }
 
         const messages = await Message.find({
             conversationId: conversation._id
         }).sort({ createdAt: 1 })
+        res.status(200).json(messages)
 
     } catch (error) {
-        res.status(500).json({ errod: error.message })
+        res.status(500).json({ error: error.message })
 
     }
 }
@@ -82,14 +86,14 @@ const getConversations = async (req, res) => {
         });
 
         conversations.forEach(conversation => {
-            conversation,participants = conversation.participants.filter(
+            conversation.participants = conversation.participants.filter(
                 participant => participant._id.toString() !== userId.toString()
             )
         })
         
         res.status(200).json(conversations);
     } catch (error) {
-        res.status(500).json({ errod: error.message })
+        res.status(500).json({ error: error.message })
 
     }
 }

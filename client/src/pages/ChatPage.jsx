@@ -12,27 +12,27 @@ import { useUserContext } from "../contexts/UserContext";
 export default function ChatPage() {
     const showToast = useShowToast();
     const [loadingConversations, setLoadingConversations] = useState(true)
-    const { selectedConversations, conversations, conversationsDataHandler } = useMessageContext()
+    const { selectedConversations, selectedConversationsDataHandler, conversations, conversationsDataHandler, setConversations } = useMessageContext()
     const [searchText, setSeachText] = useState("");
     const [searchUser, setSearchUser] = useState(false);
     const { userData } = useUserContext();
 
-    useEffect(() => {
 
+    useEffect(() => {
+        console.log(conversations);
+        
         const getConversations = async () => {
             try {
                 const res = await fetch("/api/messages/conversations")
                 const data = await res.json();
 
                 if (data.error) {
-                    showToast(false, error.message)
+                    showToast(false, data.error)
                     return
                 }
                 conversationsDataHandler(data)
             } catch (error) {
-                console.log(error);
-
-                showToast(false, error.message)
+                showToast(false, error.error)
             } finally {
                 setLoadingConversations(false)
             }
@@ -45,11 +45,15 @@ export default function ChatPage() {
         setSearchUser(true);
 
         try {
-            console.log(`/api/users/profile/${searchText}`);
-            
-const res = await fetch(`/api/users/profile/${encodeURIComponent(searchText)}`);
+
+            if (searchText.length === 0) {
+                showToast(false, "Type the user you want to find!");
+                return
+            }
+
+            const res = await fetch(`/api/users/profile/${encodeURIComponent(searchText)}`);
             const searchedUser = await res.json()
-            console.log(searchedUser);
+
 
             if (searchedUser.error) {
                 showToast(false, searchedUser.error)
@@ -57,13 +61,48 @@ const res = await fetch(`/api/users/profile/${encodeURIComponent(searchText)}`);
                 return
             }
 
-            if (searchUser._id === userData._id) {
+            const messagingYourself = searchedUser._id === userData._id;
+
+            if (messagingYourself) {
                 showToast(false, "You cannto message yourself!")
                 return
             }
-                setSearchUser("")
+
+            const conversationExist = conversations.find(conversation => conversation.participants[0]._id === searchedUser._id);
+
+            if (conversationExist) {
+                selectedConversationsDataHandler({
+                    _id: conversationExist._id,
+                    userId: searchedUser._id,
+                    username: searchedUser.username,
+                    userProfilePic: searchedUser.profilePic
+                });
+                return
+            }
+
+            const mockConversation = {
+                mock: true,
+                lastMessage: {
+                    text: "",
+                    sender: ""
+                },
+                _id: Date.now(),
+                participants: [{
+                    _id: searchedUser._id,
+                    username: searchedUser.username,
+                    profilePic: searchedUser.profilePic
+                }]
+            };
+
+            conversationsDataHandler((prev) => [...prev, mockConversation])
+
+
+
         } catch (error) {
             showToast(false, error.message)
+        } finally {
+            setSearchUser("")
+
         }
 
     }
@@ -138,10 +177,13 @@ const res = await fetch(`/api/users/profile/${encodeURIComponent(searchText)}`);
                         (<h1>No messages yet!</h1>)
                     }
 
-                    {!loadingConversations &&
-                        (conversations.map((conversation) => {
-                            <Conversation key={conversation._id} conversation={conversation} />
-                        }))
+                    {!loadingConversations && conversations?.length > 0 &&
+                        (
+                            conversations.map((conversation) => (
+                                 <Conversation key={conversation._id} conversation={conversation} /> 
+                            )
+                            )
+                        )
                     }
                 </Flex>
                 {!selectedConversations._id && (
