@@ -7,6 +7,7 @@ import useShowToast from "../../hooks/useShowToast";
 import { useMessageContext } from "../../contexts/MessageContex";
 import { useState } from "react";
 import { useUserContext } from "../../contexts/UserContext";
+import { useColorMode } from "../ui/color-mode";
 
 
 export default function MessageContainer() {
@@ -15,7 +16,8 @@ export default function MessageContainer() {
     const { userData } = useUserContext()
     const [loadingMessages, setLoadingmessages] = useState(true);
     const [messages, setMessages] = useState([]);
-
+    const { colorMode } = useColorMode()
+ 
     useEffect(() => {
         const getMessages = async () => {
             setMessages([])
@@ -47,18 +49,21 @@ export default function MessageContainer() {
         getMessages();
     }, [selectedConversations])
 
+    console.log(selectedConversations);
+    
     return (
         <Flex flex={"70"}
             flexDirection={"column"}
             borderRadius={"md"}
-            bg={"gray.900"}
+            h={"70dvh"}
+            bg={colorMode === "dark" ? "gray.700" : "gray.400"}
             p={2}
         >
             <Flex w={"full"} h={12}
                 gap={2}>
                 <Avatar.Root size={"sm"} >
                     <Avatar.Fallback name="Empty User" />
-                    <Avatar.Image src={selectedConversations.userProfilePicture} />
+                    <Avatar.Image src={selectedConversations.userProfilePic} />
                 </Avatar.Root>
                 <Text fontWeight={"700"} display={"flex"} alignItems={"center"}>
                     {selectedConversations.username}

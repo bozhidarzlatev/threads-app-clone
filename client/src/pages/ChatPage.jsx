@@ -8,8 +8,10 @@ import { useState } from "react";
 import { useMessageContext } from "../contexts/MessageContex";
 import { GiConversation } from "react-icons/gi";
 import { useUserContext } from "../contexts/UserContext";
+import { useColorMode } from "../components/ui/color-mode";
 
 export default function ChatPage() {
+    const { colorMode } = useColorMode();
     const showToast = useShowToast();
     const [loadingConversations, setLoadingConversations] = useState(true)
     const { selectedConversations, selectedConversationsDataHandler, conversations, conversationsDataHandler, setConversations } = useMessageContext()
@@ -20,7 +22,7 @@ export default function ChatPage() {
 
     useEffect(() => {
         console.log(conversations);
-        
+
         const getConversations = async () => {
             try {
                 const res = await fetch("/api/messages/conversations")
@@ -131,13 +133,17 @@ export default function ChatPage() {
                 mx={"auto"}
             >
                 <Flex flex={30}
+                    p={2}
                     gap={2}
+                    borderRadius={"md"}
                     flexDirection={"column"}
                     maxW={{
                         sm: "250px",
                         md: "full"
                     }}
                     mx={"auto"}
+                    h={"70dvh"}
+                    bg={colorMode === "dark" ? "gray.700" : "gray.400"}
                 >
                     <Text fontWeight={700} >Your Conversations</Text>
                     <form onSubmit={handleConversationSearch}>
@@ -180,7 +186,7 @@ export default function ChatPage() {
                     {!loadingConversations && conversations?.length > 0 &&
                         (
                             conversations.map((conversation) => (
-                                 <Conversation key={conversation._id} conversation={conversation} /> 
+                                <Conversation key={conversation._id} conversation={conversation} />
                             )
                             )
                         )
