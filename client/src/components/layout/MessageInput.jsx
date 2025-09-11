@@ -39,7 +39,6 @@ export default function MessageInput({ setMessages }) {
       }
 
       setMessages((prev) => [...prev, data])
-      console.log(1, conversations);
       
       conversationsDataHandler(prev => {
         const updConv = prev.map(conversation => {
@@ -52,11 +51,9 @@ export default function MessageInput({ setMessages }) {
               }
             }
           }
-          
           return conversation
         })
         
-        console.log(2, conversations);
         return updConv;
       })
       
