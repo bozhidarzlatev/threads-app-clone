@@ -6,14 +6,19 @@ import { useEffect } from "react";
 import useShowToast from "../hooks/useShowToast";
 import { useState } from "react";
 import { useMessageContext } from "../contexts/MessageContex";
+import { GiConversation } from "react-icons/gi";
+import { useUserContext } from "../contexts/UserContext";
 
 export default function ChatPage() {
     const showToast = useShowToast();
     const [loadingConversations, setLoadingConversations] = useState(true)
-    const { conversations, conversationsDataHandler } = useMessageContext()
- 
+    const { selectedConversations, conversations, conversationsDataHandler } = useMessageContext()
+    const [searchText, setSeachText] = useState("");
+    const [searchUser, setSearchUser] = useState(false);
+    const { userData } = useUserContext();
+
     useEffect(() => {
-        
+
         const getConversations = async () => {
             try {
                 const res = await fetch("/api/messages/conversations")
@@ -26,14 +31,42 @@ export default function ChatPage() {
                 conversationsDataHandler(data)
             } catch (error) {
                 console.log(error);
-                
+
                 showToast(false, error.message)
             } finally {
                 setLoadingConversations(false)
             }
         }
         getConversations()
-    }, [])
+    }, []);
+
+    const handleConversationSearch = async (e) => {
+        e.preventDefault();
+        setSearchUser(true);
+
+        try {
+            console.log(`/api/users/profile/${searchText}`);
+            
+const res = await fetch(`/api/users/profile/${encodeURIComponent(searchText)}`);
+            const searchedUser = await res.json()
+            console.log(searchedUser);
+
+            if (searchedUser.error) {
+                showToast(false, searchedUser.error)
+                setSearchUser(false)
+                return
+            }
+
+            if (searchUser._id === userData._id) {
+                showToast(false, "You cannto message yourself!")
+                return
+            }
+                setSearchUser("")
+        } catch (error) {
+            showToast(false, error.message)
+        }
+
+    }
 
     return (
         <Box position={"absolute"}
@@ -68,10 +101,16 @@ export default function ChatPage() {
                     mx={"auto"}
                 >
                     <Text fontWeight={700} >Your Conversations</Text>
-                    <form>
+                    <form onSubmit={handleConversationSearch}>
                         <Flex alignItems={"center"} gap={2}>
-                            <Input placeholer={'Search for user'} />
-                            <Button size={"sm"}>
+                            <Input placeholer={'Search for user'}
+                                onChange={(e) => setSeachText(e.target.value)}
+                            />
+                            <Button
+                                size={"sm"}
+                                onClick={handleConversationSearch}
+                                loading={searchUser}
+                            >
                                 <RiSearchFill />
                             </Button>
                         </Flex>
@@ -97,27 +136,31 @@ export default function ChatPage() {
 
                     {!loadingConversations && conversations.length === 0 &&
                         (<h1>No messages yet!</h1>)
-                    } 
+                    }
 
-                    {!loadingConversations && 
+                    {!loadingConversations &&
                         (conversations.map((conversation) => {
-                            <Conversation key={conversation._id} conversation={conversation}/>
+                            <Conversation key={conversation._id} conversation={conversation} />
                         }))
                     }
                 </Flex>
-                {/* <Flex
-                    flex={70}
-                    borderRadius={"md"}
-                    p={2}
-                    flexDir={"column"}
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    height={"400px"}
-                >
-                    <GiConversation size={100} />
-                    <Text fontSize={20}>Select a conversations to start messaging</Text>
-                </Flex> */}
-                <MessageContainer />
+                {!selectedConversations._id && (
+                    <Flex
+                        flex={70}
+                        borderRadius={"md"}
+                        p={2}
+                        flexDir={"column"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        height={"400px"}
+                    >
+                        <GiConversation size={100} />
+                        <Text fontSize={20}>Select a conversations to start messaging</Text>
+                    </Flex>
+                )}
+                {selectedConversations._id &&
+                    <MessageContainer />
+                }
             </Flex>
 
         </Box>

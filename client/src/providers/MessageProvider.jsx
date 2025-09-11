@@ -2,13 +2,10 @@ import { useState } from "react";
 import { MessageContext } from "../contexts/MessageContex";
 
 export default function MessageProvider({ children }) {
-    const [messages, setMessages] = useState([])
     const [conversations, setConversationst] = useState([])
     const [selectedConversations, setselectedConversationst] = useState([])
 
-    const messagesDataHandler = (data) => {
-        setMessages(data);
-    }
+
     const conversationsDataHandler = (data) => {
         setConversationst(data);
     }
@@ -17,7 +14,7 @@ export default function MessageProvider({ children }) {
         setselectedConversationst(data);
     }
     return (
-        <MessageContext.Provider value={{ conversations, conversationsDataHandler, messages, messagesDataHandler,selectedConversations, selectedConversationsDataHandler}}>
+        <MessageContext.Provider value={{ conversations, conversationsDataHandler, selectedConversations, selectedConversationsDataHandler}}>
             {children}
         </MessageContext.Provider>
     )

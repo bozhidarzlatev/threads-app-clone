@@ -2,12 +2,51 @@ import { Avatar, Flex, Image, Skeleton, SkeletonCircle, Text } from "@chakra-ui/
 import { Separator } from "@chakra-ui/react"
 import Message from "./Message";
 import MessageInput from "./MessageInput";
+import { useEffect } from "react";
+import useShowToast from "../../hooks/useShowToast";
+import { useMessageContext } from "../../contexts/MessageContex";
+import { useState } from "react";
+import { useUserContext } from "../../contexts/UserContext";
 
 
 export default function MessageContainer() {
+    const showToast = useShowToast();
+    const { selectedConversations } = useMessageContext();
+    const { userData } = useUserContext()
+    const [loadingMessages, setLoadingmessages] = useState(true);
+    const [messages, setMessages] = useState([]);
+
+    useEffect(() => {
+        const setMessages = async () => {
+            setMessages([])
+            setLoadingmessages(true)
+
+            try {
+                const res = await fetch('/api/messages/${selectedConversations.userId}')
+                const data = await res.json();
+
+                if (data.error) {
+                    showToast(false, data.message)
+                    return
+                }
+
+                setMessages(data);
+
+            } catch (error) {
+                showToast(false, error.message)
+            } finally {
+                setLoadingmessages(false)
+            }
+
+
+        }
+
+        setMessages();
+    }, [selectedConversations.userId])
+
     return (
         <Flex flex={"70"}
-        flexDirection={"column"}
+            flexDirection={"column"}
             borderRadius={"md"}
             bg={"gray.900"}
             p={2}
@@ -16,46 +55,48 @@ export default function MessageContainer() {
                 gap={2}>
                 <Avatar.Root size={"sm"} >
                     <Avatar.Fallback name="Empty User" />
-                    <Avatar.Image src="" />
+                    <Avatar.Image src={selectedConversations.userProfilePicture} />
                 </Avatar.Root>
                 <Text fontWeight={"700"} display={"flex"} alignItems={"center"}>
-                    johndoe
+                    {selectedConversations.username}
                     <Image src="/verified.png" w={4} ml={2} />
                 </Text>
             </Flex>
             <Separator color={"red.200"} />
             <Flex flexDir={"column"} gap={4} my={4}
-            p={2}
-            height={"400px"} 
-            overflowY={"auto"}
+                p={2}
+                height={"400px"}
+                overflowY={"auto"}
             >
-                {true && (
+                {loadingMessages && (
                     [...Array(5)].map((_, i) => (
                         <Flex
-                        key={i} 
-                        gap={2}
-                        alignItems={"center"}
-                        p={1}
-                        borderRadius={"md"}
-                        alignSelf={i % 2 === 0 ? "flex-start" : "flex-end"}
+                            key={i}
+                            gap={2}
+                            alignItems={"center"}
+                            p={1}
+                            borderRadius={"md"}
+                            alignSelf={i % 2 === 0 ? "flex-start" : "flex-end"}
                         >
-                            {i % 2 === 0 && <SkeletonCircle size={7}/>}
+                            {i % 2 === 0 && <SkeletonCircle size={7} />}
                             <Flex flexDir={"column"} gap={2}>
-                                <Skeleton h="8px" w="250px"/>
-                                <Skeleton h="8px" w="250px"/>
-                                <Skeleton h="8px" w="250px"/>
+                                <Skeleton h="8px" w="250px" />
+                                <Skeleton h="8px" w="250px" />
+                                <Skeleton h="8px" w="250px" />
                             </Flex>
-                            {i % 2 !== 0 && <SkeletonCircle size={7}/>}
+                            {i % 2 !== 0 && <SkeletonCircle size={7} />}
                         </Flex>
 
                     ))
                 )}
 
-                <Message ownMessage={true} />
-                <Message ownMessage={false} />
-                <Message ownMessage={true} />
+                {!loadingMessages && (
+                    messages.map((message) => (
+                        <Message key={message._id} ownMessage={userData._id === message.sender} message={message} />
+                    ))
+                )}
             </Flex>
-            <MessageInput />
+            <MessageInput setMessages={setMessages}/>
         </Flex>
     )
 }

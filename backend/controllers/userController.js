@@ -186,6 +186,8 @@ const updateUser = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
     const { query } = req.params;
+    console.log(`tuk`, query);
+    
     try {
         let user;
         if(mongoose.Types.ObjectId.isValid(query)){
