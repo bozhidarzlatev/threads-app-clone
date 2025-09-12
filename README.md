@@ -22,6 +22,7 @@ The Thread Clone App allows users to create, view, and interact with posts, just
 Additionally, the app uses:
 - JWT (JSON Web Tokens) for user authentication
 - Chakra UI
+- WebSocket (socket.io) for realtime user and message statuses
 
 ## Roadmap
 - [X] Build UI
