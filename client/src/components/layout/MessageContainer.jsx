@@ -25,10 +25,10 @@ export default function MessageContainer() {
     useEffect(() => {
         socket.on("newMessage", (message) => {
 
-            if(selectedConversations._id === message.conversationId){
+            if (selectedConversations._id === message.conversationId) {
 
                 setMessages((prev) => [...prev, message]);
-                
+
             }
 
             conversationsDataHandler((prev) => {
@@ -52,7 +52,40 @@ export default function MessageContainer() {
         });
 
         return () => socket.off("newMessage")
-    }, [socket])
+    }, [socket, selectedConversations])
+
+    useEffect(() => {
+
+        const lastMessageIsFromOtherUser = messages.length &&  messages[messages.length-1].sender !== userData._id;
+        if(lastMessageIsFromOtherUser ) {
+            socket.emit("markMessagesAsSeen" , {
+                conversationId: selectedConversations._id,
+                userId: selectedConversations.userId
+            })
+            
+        }
+
+        socket.on("messagesSeen", ({conversationId}) => {
+            if(selectedConversations._id === conversationId) {
+                setMessages(prev => {
+                    const updMessages = prev.map( message => {
+                        if(!message.seen) {
+                            return {
+                                ...message,
+                                seen: true
+                            }
+                        }
+                        return message
+                    })
+                    return updMessages
+                })
+            }
+
+            
+        })
+
+        
+    }, [socket, userData._id, messages, selectedConversations])
 
     useEffect(() => {
         const getMessages = async () => {
@@ -88,7 +121,8 @@ export default function MessageContainer() {
     }, [selectedConversations])
 
     useEffect(() => {
-  messageEndRef.current?.scrollIntoView({ behavior: "smooth" })    }, [messages])
+        messageEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }, [messages])
 
 
     return (
@@ -96,7 +130,7 @@ export default function MessageContainer() {
             flexDirection={"column"}
             borderRadius={"md"}
             h={"70dvh"}
-            bg={colorMode === "dark" ? "gray.700" : "gray.400"}
+            bg={colorMode === "dark" ? "gray.700" : "gray.500"}
             p={2}
         >
             <Flex w={"full"} h={12}
@@ -142,9 +176,9 @@ export default function MessageContainer() {
                 {!loadingMessages && (
                     messages.map((message) => (
                         <Flex
-                        key={message._id}
-                        direction={"column"}
-                        ref={messages.length - 1 === messages.indexOf(message) ? messageEndRef : null}
+                            key={message._id}
+                            direction={"column"}
+                            ref={messages.length - 1 === messages.indexOf(message) ? messageEndRef : null}
                         >
                             <Message ownMessage={userData._id === message.sender} message={message} />
                         </Flex>

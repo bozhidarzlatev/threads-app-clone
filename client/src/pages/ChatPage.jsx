@@ -144,7 +144,7 @@ export default function ChatPage() {
                     }}
                     mx={"auto"}
                     h={"70dvh"}
-                    bg={colorMode === "dark" ? "gray.700" : "gray.400"}
+                    bg={colorMode === "dark" ? "gray.700" : "gray.500"}
                 >
                     <Text fontWeight={700} >Your Conversations</Text>
                     <form onSubmit={handleConversationSearch}>

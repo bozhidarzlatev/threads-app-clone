@@ -1,10 +1,11 @@
-import { Avatar, Flex, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 import { useMessageContext } from "../../contexts/MessageContex";
 import { useUserContext } from "../../contexts/UserContext";
+import { BsCheck2All } from "react-icons/bs";
 
 export default function Message({ ownMessage, message }) {
-    const {selectedConversations} = useMessageContext()
-    const {userData} = useUserContext()
+    const { selectedConversations } = useMessageContext()
+    const { userData } = useUserContext()
 
     return (
 
@@ -16,11 +17,20 @@ export default function Message({ ownMessage, message }) {
                     gap={2}
                     alignSelf={"flex-end"}
                 >
-                    <Text maxW={"350px"} bg={"blue.400"}
-                        p={1} borderRadius={"md"}
-                    >
-                        {message.text}  
-                    </Text>
+
+                    <Flex bg={"green.800"} maxW={"350px"} p={1} borderRadius={"md"}> 
+
+                        <Text color={"white"}
+                        >
+                            {message.text}
+                        </Text>
+                        {message.seen && 
+                        <Box alignSelf={"flex-end"} ml={1} color={"white"} fontWeight={"bold"}>
+                            <BsCheck2All />
+                        </Box>
+                        }
+                    </Flex>
+
                     <Avatar.Root w={7} h={7} >
                         <Avatar.Fallback name="Empty User" />
                         <Avatar.Image src={userData.profilePic} />
@@ -28,7 +38,7 @@ export default function Message({ ownMessage, message }) {
 
                 </Flex >
             ) : (
-                
+
                 < Flex
                     gap={2}
                 >
@@ -39,7 +49,7 @@ export default function Message({ ownMessage, message }) {
                     <Text maxW={"350px"} bg={"gray.400"}
                         p={1} borderRadius={"md"}
                     >
-                        {message.text} 
+                        {message.text}
                     </Text>
 
                 </Flex >
