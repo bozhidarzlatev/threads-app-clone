@@ -9,6 +9,7 @@ import { useMessageContext } from "../contexts/MessageContex";
 import { GiConversation } from "react-icons/gi";
 import { useUserContext } from "../contexts/UserContext";
 import { useColorMode } from "../components/ui/color-mode";
+import { useSocket } from "../contexts/SocketContext";
 
 export default function ChatPage() {
     const { colorMode } = useColorMode();
@@ -18,6 +19,7 @@ export default function ChatPage() {
     const [searchText, setSeachText] = useState("");
     const [searchUser, setSearchUser] = useState(false);
     const { userData } = useUserContext();
+    const {socket, onlineUsers} = useSocket()
 
 
     useEffect(() => {
@@ -185,7 +187,9 @@ export default function ChatPage() {
                     {!loadingConversations && conversations?.length > 0 &&
                         (
                             conversations.map((conversation) => (
-                                <Conversation key={conversation._id} conversation={conversation} />
+                                <Conversation key={conversation._id} 
+                                isOnline={onlineUsers.includes(conversation.participants[0]._id)}
+                                conversation={conversation} />
                             )
                             )
                         )

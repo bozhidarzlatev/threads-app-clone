@@ -6,12 +6,12 @@ import { useMessageContext } from "../../contexts/MessageContex";
 
 
 
-export default function Conversation({ conversation }) {
+export default function Conversation({ conversation, isOnline }) {
     const { userData } = useUserContext();
     const { selectedConversations, selectedConversationsDataHandler } = useMessageContext()
     const user = conversation.participants[0];
     const lastMessage = conversation.lastMessage;
-
+    
     return (
         <Flex
             gap={4}
@@ -41,14 +41,17 @@ export default function Conversation({ conversation }) {
                     <Avatar.Fallback name="Empty User" />
                     <Avatar.Image src={user.profilePic} />
                 </Avatar.Root>
+                { isOnline && 
                 <Badge
 
                     position={"relative"}
                     left={-2}
                     top={6}
                     variant="solid" colorPalette="green" borderRadius={"full"}>
+
                     <HiStatusOnline />
                 </Badge>
+                    }
             </WrapItem>
             <Stack direction={"column"} fontSize={"sm"}>
                 <Text fontWeight={"700"} display={"flex"} alignItems={"center"}>
