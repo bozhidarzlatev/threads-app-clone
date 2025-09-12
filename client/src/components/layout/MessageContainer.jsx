@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useUserContext } from "../../contexts/UserContext";
 import { useColorMode } from "../ui/color-mode";
 import { useSocket } from "../../contexts/SocketContext";
+import { useRef } from "react";
 
 
 export default function MessageContainer() {
@@ -19,14 +20,20 @@ export default function MessageContainer() {
     const [messages, setMessages] = useState([]);
     const { colorMode } = useColorMode()
     const { socket } = useSocket()
+    const messageEndRef = useRef(null)
 
     useEffect(() => {
         socket.on("newMessage", (message) => {
-            setMessages((prev) => [...prev, message]);
+
+            if(selectedConversations._id === message.conversationId){
+
+                setMessages((prev) => [...prev, message]);
+                
+            }
 
             conversationsDataHandler((prev) => {
-                const updConv = prev.map((conversation) =>{
-                    if(conversation._id === selectedConversations._id){
+                const updConv = prev.map((conversation) => {
+                    if (conversation._id === message.conversationId) {
                         return {
                             ...conversation,
                             lastMessage: {
@@ -80,6 +87,9 @@ export default function MessageContainer() {
         getMessages();
     }, [selectedConversations])
 
+    useEffect(() => {
+  messageEndRef.current?.scrollIntoView({ behavior: "smooth" })    }, [messages])
+
 
     return (
         <Flex flex={"70"}
@@ -131,7 +141,13 @@ export default function MessageContainer() {
 
                 {!loadingMessages && (
                     messages.map((message) => (
-                        <Message key={message._id} ownMessage={userData._id === message.sender} message={message} />
+                        <Flex
+                        key={message._id}
+                        direction={"column"}
+                        ref={messages.length - 1 === messages.indexOf(message) ? messageEndRef : null}
+                        >
+                            <Message ownMessage={userData._id === message.sender} message={message} />
+                        </Flex>
                     ))
                 )}
             </Flex>
