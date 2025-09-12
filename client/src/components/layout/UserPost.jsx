@@ -79,5 +79,6 @@ export default function UserPost({ likes, replies, postImg, postTitle }) {
             </Flex>
 
         </Link>
+        
     )
 }

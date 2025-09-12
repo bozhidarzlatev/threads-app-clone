@@ -28,6 +28,7 @@ Additionally, the app uses:
 - [X] Build Backend
 - [X] Set up MongoDB
 - [X] Implement Authenticatin
-- [ ] Implement post Functionalities
+- [X] Implement post Functionalities
+- [X] Chat Functionalities
 
 

@@ -11,7 +11,7 @@ export default function UserHeader({ user }) {
     const { userData } = useUserContext();
     const currentUser = userData;
     const showToast = useShowToast()
-    const [follow, setFollow] = useState(user.followers.includes(currentUser._id))
+    const [follow, setFollow] = useState(user.followers.includes(currentUser?._id))
     const [updating, setUpdating] = useState(false)
 
 
@@ -108,12 +108,12 @@ export default function UserHeader({ user }) {
             </Flex>
 
             <Text>{user.bio}</Text>
-            {currentUser._id === user._id && (
+            {currentUser?._id === user._id && (
                 <Link to={"/auth/update"}>
                     <Button size={"sm"}>Update Profile</Button>
                 </Link>
             )}
-            {currentUser._id !== user._id && (
+            {currentUser?._id !== user._id && (
 
                 <Button onClick={handleFollowUnfollow}   size={"sm"} loading={updating}>{updating ? "Loaging..." : follow ? "Unfollow" : "Follow"}</Button>
             )}

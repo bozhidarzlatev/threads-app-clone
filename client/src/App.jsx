@@ -13,12 +13,15 @@ import NavigateButtons from "./components/layout/NavigateButtons"
 import PostProvider from "./providers/PostProvider"
 import ChatPage from "./pages/ChatPage"
 import MessageProvider from "./providers/MessageProvider"
+import { SocketContextProvider } from "./contexts/SocketContext"
 
 function App() {
 
   return (
     <>
       <UserProvider>
+        <SocketContextProvider>
+
         <PostProvider>
           <MessageProvider>
 
@@ -46,6 +49,7 @@ function App() {
           </MessageProvider>
 
         </PostProvider >
+        </SocketContextProvider>
       </UserProvider>
 
 
