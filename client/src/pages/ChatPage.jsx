@@ -19,8 +19,29 @@ export default function ChatPage() {
     const [searchText, setSeachText] = useState("");
     const [searchUser, setSearchUser] = useState(false);
     const { userData } = useUserContext();
-    const {socket, onlineUsers} = useSocket()
+    const { socket, onlineUsers } = useSocket()
 
+
+    useEffect(() => {
+        socket?.on("messagesSeen", ({conversationId}) => {
+            conversationsDataHandler(prev => {
+                const updConv = prev.map(conversation => {
+                    if (conversation._id === conversationId) {
+                        return {
+                            ...conversation,
+                            lastMessage: {
+                                ...conversation.lastMessage,
+                                seen: true
+                            }
+                        }
+                    }
+                    return conversation
+                })
+                return updConv
+            })
+        })
+
+    }, [socket])
 
     useEffect(() => {
 
@@ -187,9 +208,9 @@ export default function ChatPage() {
                     {!loadingConversations && conversations?.length > 0 &&
                         (
                             conversations.map((conversation) => (
-                                <Conversation key={conversation._id} 
-                                isOnline={onlineUsers.includes(conversation.participants[0]._id)}
-                                conversation={conversation} />
+                                <Conversation key={conversation._id}
+                                    isOnline={onlineUsers.includes(conversation.participants[0]._id)}
+                                    conversation={conversation} />
                             )
                             )
                         )

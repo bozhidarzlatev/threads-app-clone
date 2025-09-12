@@ -1,7 +1,8 @@
-import { Avatar, Badge, Flex, Image, Stack, Text, WrapItem } from "@chakra-ui/react";
+import { Avatar, Badge, Box, Flex, Image, Stack, Text, WrapItem } from "@chakra-ui/react";
 import { HiStatusOnline } from "react-icons/hi";
 import { useUserContext } from "../../contexts/UserContext";
-import { BsCheckAll } from "react-icons/bs";
+import { BsCheck2, BsCheck2All } from "react-icons/bs";
+
 import { useMessageContext } from "../../contexts/MessageContex";
 
 
@@ -59,7 +60,14 @@ export default function Conversation({ conversation, isOnline }) {
                     <Image src="/verified.png" w={4} ml={2} />
                 </Text>
                 <Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
-                    {userData._id === lastMessage.sender ? <BsCheckAll size={16} /> : ""}
+                    {userData._id === lastMessage.sender ?(
+                        <Box>
+                            {lastMessage.seen ? 
+                           ( <BsCheck2All  size={16} />) : ( <BsCheck2   size={16} />)
+                            
+                        }
+                        </Box>
+                         ) : ""}
                     {lastMessage.text.length > 18 ? lastMessage.text.substring(0, 18) + '...' : lastMessage.text}</Text>
 
             </Stack>

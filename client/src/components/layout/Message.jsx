@@ -1,7 +1,7 @@
 import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 import { useMessageContext } from "../../contexts/MessageContex";
 import { useUserContext } from "../../contexts/UserContext";
-import { BsCheck2All } from "react-icons/bs";
+import { BsCheck2All , BsCheck2} from "react-icons/bs";
 
 export default function Message({ ownMessage, message }) {
     const { selectedConversations } = useMessageContext()
@@ -27,6 +27,11 @@ export default function Message({ ownMessage, message }) {
                         {message.seen && 
                         <Box alignSelf={"flex-end"} ml={1} color={"white"} fontWeight={"bold"}>
                             <BsCheck2All />
+                        </Box>
+                        }
+                        {!message.seen && 
+                        <Box alignSelf={"flex-end"} ml={1} color={"white"} fontWeight={"bold"}>
+                            <BsCheck2 />
                         </Box>
                         }
                     </Flex>
