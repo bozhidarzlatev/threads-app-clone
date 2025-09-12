@@ -8,26 +8,55 @@ import { useMessageContext } from "../../contexts/MessageContex";
 import { useState } from "react";
 import { useUserContext } from "../../contexts/UserContext";
 import { useColorMode } from "../ui/color-mode";
+import { useSocket } from "../../contexts/SocketContext";
 
 
 export default function MessageContainer() {
     const showToast = useShowToast();
-    const { selectedConversations } = useMessageContext();
+    const { selectedConversations, conversationsDataHandler } = useMessageContext();
     const { userData } = useUserContext()
     const [loadingMessages, setLoadingmessages] = useState(true);
     const [messages, setMessages] = useState([]);
     const { colorMode } = useColorMode()
- 
+    const { socket } = useSocket()
+
+    useEffect(() => {
+        socket.on("newMessage", (message) => {
+            setMessages((prev) => [...prev, message]);
+
+            conversationsDataHandler((prev) => {
+                const updConv = prev.map((conversation) =>{
+                    if(conversation._id === selectedConversations._id){
+                        return {
+                            ...conversation,
+                            lastMessage: {
+                                text: message.text,
+                                sender: message.sender
+                            }
+                        }
+                    }
+
+                    return conversation;
+                })
+
+                return updConv
+            })
+
+        });
+
+        return () => socket.off("newMessage")
+    }, [socket])
+
     useEffect(() => {
         const getMessages = async () => {
             setMessages([])
             setLoadingmessages(true)
 
             try {
-                
-                if(selectedConversations.mock) return;
+
+                if (selectedConversations.mock) return;
                 const res = await fetch(`/api/messages/${encodeURIComponent(selectedConversations.userId)}`)
-                
+
                 const data = await res.json();
 
                 if (data.error) {
@@ -36,7 +65,7 @@ export default function MessageContainer() {
                 }
 
                 setMessages(data);
-                
+
             } catch (error) {
                 showToast(false, error.message)
                 return
@@ -44,14 +73,14 @@ export default function MessageContainer() {
                 setLoadingmessages(false)
             }
 
-            
+
 
         }
 
         getMessages();
     }, [selectedConversations])
 
-    
+
     return (
         <Flex flex={"70"}
             flexDirection={"column"}
@@ -72,8 +101,8 @@ export default function MessageContainer() {
                 </Text>
             </Flex>
             <Separator color={"red.200"} />
-            <Flex 
-            flex={1} flexDir={"column"} gap={4} my={4}
+            <Flex
+                flex={1} flexDir={"column"} gap={4} my={4}
                 p={2}
                 height={"400px"}
                 overflowY={"auto"}
@@ -106,7 +135,7 @@ export default function MessageContainer() {
                     ))
                 )}
             </Flex>
-            <MessageInput setMessages={setMessages}/>
+            <MessageInput setMessages={setMessages} />
         </Flex>
     )
 }

@@ -33,8 +33,8 @@ export default function MessageInput({ setMessages }) {
 
       const data = await res.json();
 
-      if (data.errot) {
-        showToast(false, data.message)
+      if (data.error) {
+        showToast(false, data.error)
         return;
       }
 
