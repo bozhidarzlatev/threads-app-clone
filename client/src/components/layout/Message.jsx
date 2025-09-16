@@ -1,11 +1,18 @@
-import { Avatar, Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Image, Skeleton, Text } from "@chakra-ui/react";
 import { useMessageContext } from "../../contexts/MessageContex";
 import { useUserContext } from "../../contexts/UserContext";
 import { BsCheck2All, BsCheck2 } from "react-icons/bs";
+import { useState } from "react";
+import { useEffect } from "react";
 
 export default function Message({ ownMessage, message }) {
     const { selectedConversations } = useMessageContext()
-    const { userData } = useUserContext()
+    const { userData } = useUserContext();
+    const [imgLoaded, setImgLoaded] = useState(false)
+
+    useEffect(() => {
+        console.log("imgLoaded updated:", imgLoaded);
+    }, [imgLoaded]);
 
     return (
 
@@ -37,13 +44,38 @@ export default function Message({ ownMessage, message }) {
                         </Flex>)
                     }
 
-                    {message.img && (
+                    {message.img && !imgLoaded && (
+                        <Flex mt={5} w={"200px"}>
+                            <Image
+                                src={message.img}
+                                alt="Message image"
+                                borderRadius={4}
+                                hidden
+                                onLoad={() => {
+                                    setImgLoaded(true); console.log(imgLoaded);
+                                }}
+                            />
+                            <Skeleton w={"200px"} h={"200px"} />
+                        </Flex>
+                    )}
+
+                    {message.img && imgLoaded && (
                         <Flex mt={5} w={"200px"}>
                             <Image
                                 src={message.img}
                                 alt="Message image"
                                 borderRadius={4}
                             />
+                            {message.seen &&
+                                <Box alignSelf={"flex-end"} ml={1} color={"white"} fontWeight={"bold"}>
+                                    <BsCheck2All />
+                                </Box>
+                            }
+                            {!message.seen &&
+                                <Box alignSelf={"flex-end"} ml={1} color={"white"} fontWeight={"bold"}>
+                                    <BsCheck2 />
+                                </Box>
+                            }
                         </Flex>
                     )}
                     <Avatar.Root w={7} h={7} >
@@ -70,13 +102,29 @@ export default function Message({ ownMessage, message }) {
                             {message.text}
                         </Text>
                     )}
-                    {message.img && (
+                    {message.img && !imgLoaded && (
+                        <Flex mt={5} w={"200px"}>
+                            <Image
+                                src={message.img}
+                                alt="Message image"
+                                borderRadius={4}
+                                hidden
+                                onLoad={() => {
+                                    setImgLoaded(true); console.log(imgLoaded);
+                                }}
+                            />
+                            <Skeleton w={"200px"} h={"200px"} />
+                        </Flex>
+                    )}
+
+                    {message.img && imgLoaded && (
                         <Flex mt={5} w={"200px"}>
                             <Image
                                 src={message.img}
                                 alt="Message image"
                                 borderRadius={4}
                             />
+
                         </Flex>
                     )}
 
