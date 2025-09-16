@@ -1,11 +1,13 @@
 import Conversation from "../models/conversationModel .js";
 import Message from "../models/messageModel.js";
 import { getRecipientSocketId, io } from "../socket/socket.js";
+import { v2 as cloudinary }  from "cloudinary";
 
 const sentMessage = async (req, res) => {
 
     try {
         const { recipientId, message } = req.body;
+        let { img } = req.body;
         const senderId = req.user._id;
 
         let conversation = await Conversation.findOne({
@@ -24,10 +26,17 @@ const sentMessage = async (req, res) => {
             await conversation.save()
         }
 
+        if(img) {
+            const imgUplRes = await cloudinary.uploader.upload(img);
+            img = imgUplRes.secure_url;
+
+        }
+
         const newMessage = new Message({
             conversationId: conversation._id,
             sender: senderId,
-            text: message
+            text: message,
+            img: img || ""
         })
 
         await Promise.all([
@@ -41,7 +50,7 @@ const sentMessage = async (req, res) => {
         ])
 
         const recipientSocketId = getRecipientSocketId(recipientId);
-        if(recipientId) {
+        if (recipientId) {
             io.to(recipientSocketId).emit("newMessage", newMessage)
         }
 
@@ -57,14 +66,14 @@ const sentMessage = async (req, res) => {
 const getMessages = async (req, res) => {
     const { otherUserId } = req.params;
     const userId = req.user._id
- 
-    
+
+
     try {
         const conversation = await Conversation.findOne({
             participants: { $all: [userId, otherUserId] }
         })
-       
-        
+
+
 
         if (!conversation) {
             return res.status(404).json({ error: "Conversation not found!" })
@@ -96,7 +105,7 @@ const getConversations = async (req, res) => {
                 participant => participant._id.toString() !== userId.toString()
             )
         })
-        
+
         res.status(200).json(conversations);
     } catch (error) {
         res.status(500).json({ error: error.message })
