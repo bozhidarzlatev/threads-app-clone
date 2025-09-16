@@ -2,23 +2,18 @@ import { Avatar, Box, Flex, Text, VStack, Menu, Portal, Button } from "@chakra-u
 import { BsInstagram, } from "react-icons/bs"
 import { CgMoreO } from "react-icons/cg";
 import { toaster } from "../ui/toaster";
-import { useUserContext } from "../../contexts/UserContext";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import useShowToast from "../../hooks/useShowToast";
+import useFollowUnfollow from "../../hooks/useFollowUnfollow";
+import { useUserContext } from "../../contexts/UserContext";
 
 export default function UserHeader({ user }) {
+    const { handleFollowUnfollow,  updating, follow} = useFollowUnfollow(user)
     const { userData } = useUserContext();
     const currentUser = userData;
-    const showToast = useShowToast()
-    const [follow, setFollow] = useState(user.followers.includes(currentUser?._id))
-    const [updating, setUpdating] = useState(false)
-
 
     const copyURL = () => {
         const currentUrl = window.location.href;
         navigator.clipboard.writeText(currentUrl).then(() => {
-            console.log("URL is coppied", currentUrl);
         });
         toaster.create({
             title: "Success",
@@ -29,51 +24,7 @@ export default function UserHeader({ user }) {
         })
 
     }
-
-
-
-    const handleFollowUnfollow = async () => {
-        if(!currentUser) {
-            showToast(false, "Please login to follow")
-            return
-        }
-        setUpdating(true)
-        
-        if ( updating ) {
-            return
-        }
-
-        try {
-            const res = await fetch(`/api/users/follow/${user._id}`, {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                }
-            })
-
-            const data = await res.json();
-            if (data.error) {
-                showToast(false, data.error)
-                return
-            };
-
-            if (follow) {
-                user.followers.pop()
-            } else {
-                user.followers.push(userData._id)
-            }
-            setFollow(!follow);
-            showToast(true, data.message);
-
-        } catch (error) {
-            showToast(false, data.error)
-        } finally {
-            setUpdating(false);
-            
-        }
-    }
-
-    
+  
 
     return (
         <VStack gap={4} alignItems={"start"}>

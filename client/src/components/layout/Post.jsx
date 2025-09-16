@@ -61,6 +61,8 @@ export default function Post({ post, postedBy, setPosts }) {
         }
     }
 
+    
+
     return (
 
         <Link to={`/${user?.username}/post/${post._id}`}>
@@ -78,22 +80,22 @@ export default function Post({ post, postedBy, setPosts }) {
                     <Box w={1} h={"full"} bg="gray.400" my={2}></Box>
                     <Box position={"relative"} w={"full"} pt={"2px"}>
                         <AvatarGroup gap="0" spaceX="-4" size="xs" pt={"2px"} top={"0px"} left={"15px"} mr={2}>
-                            {post.likes[0] &&
+                            {post.replies[0] &&
                                 <Avatar.Root>
-                                    <Avatar.Fallback name={post.replies[0].name} />
-                                    <Avatar.Image src={post.replies[0].userProfilePic} />
+                                    <Avatar.Fallback name={post?.replies[0]?.name} />
+                                    <Avatar.Image src={post?.replies[0]?.userProfilePic} />
                                 </Avatar.Root>
                             }
-                            {post.likes[1] &&
+                            {post.replies[1] &&
                                 <Avatar.Root>
-                                    <Avatar.Fallback name={post.replies[1].name} />
-                                    <Avatar.Image src={post.replies[1].userProfilePic} />
+                                    <Avatar.Fallback name={post?.replies[1]?.name} />
+                                    <Avatar.Image src={post?.replies[1]?.userProfilePic} />
                                 </Avatar.Root>
                             }
-                            {post.likes[2] &&
+                            {post.replies[2] &&
                                 <Avatar.Root>
-                                    <Avatar.Fallback name={post.replies[2].name} />
-                                    <Avatar.Image src={post.replies[2].userProfilePic} />
+                                    <Avatar.Fallback name={post?.replies[2]?.name} />
+                                    <Avatar.Image src={post?.replies[2]?.userProfilePic} />
                                 </Avatar.Root>
                             }
 

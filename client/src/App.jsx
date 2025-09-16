@@ -1,5 +1,5 @@
 import { Box, Container } from "@chakra-ui/react"
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useLocation } from "react-router-dom"
 import PostPage from "./pages/PostPage"
 import Header from "./components/layout/Header"
 import UserPage from "./pages/UserPage"
@@ -16,6 +16,7 @@ import MessageProvider from "./providers/MessageProvider"
 import { SocketContextProvider } from "./contexts/SocketContext"
 
 function App() {
+  const {pathname} = useLocation()
 
   return (
     <>
@@ -30,7 +31,7 @@ function App() {
           <Toaster />
           <Box position={"relative"} w={"full"}>
 
-            <Container maxW="620px">
+            <Container maxW={pathname === "/" ? "900px": "620px"}>
               <Header />
               <Routes>
                 <Route path="/" element={<HomePage />} />

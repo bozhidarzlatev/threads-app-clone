@@ -51,9 +51,7 @@ export default function Message({ ownMessage, message }) {
                                 alt="Message image"
                                 borderRadius={4}
                                 hidden
-                                onLoad={() => {
-                                    setImgLoaded(true); console.log(imgLoaded);
-                                }}
+                                onLoad={() =>  setImgLoaded(true)}
                             />
                             <Skeleton w={"200px"} h={"200px"} />
                         </Flex>
@@ -109,9 +107,7 @@ export default function Message({ ownMessage, message }) {
                                 alt="Message image"
                                 borderRadius={4}
                                 hidden
-                                onLoad={() => {
-                                    setImgLoaded(true); console.log(imgLoaded);
-                                }}
+                                onLoad={() => setImgLoaded(true)    }                            
                             />
                             <Skeleton w={"200px"} h={"200px"} />
                         </Flex>

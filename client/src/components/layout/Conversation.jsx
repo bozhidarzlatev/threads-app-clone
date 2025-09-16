@@ -1,7 +1,7 @@
 import { Avatar, Badge, Box, Flex, Image, Stack, Text, WrapItem } from "@chakra-ui/react";
 import { HiStatusOnline } from "react-icons/hi";
 import { useUserContext } from "../../contexts/UserContext";
-import { BsCheck2, BsCheck2All } from "react-icons/bs";
+import { BsCheck2, BsCheck2All, BsFillImageFill } from "react-icons/bs";
 
 import { useMessageContext } from "../../contexts/MessageContex";
 
@@ -12,7 +12,7 @@ export default function Conversation({ conversation, isOnline }) {
     const { selectedConversations, selectedConversationsDataHandler } = useMessageContext()
     const user = conversation.participants[0];
     const lastMessage = conversation.lastMessage;
-    
+
     return (
         <Flex
             gap={4}
@@ -42,17 +42,17 @@ export default function Conversation({ conversation, isOnline }) {
                     <Avatar.Fallback name="Empty User" />
                     <Avatar.Image src={user.profilePic} />
                 </Avatar.Root>
-                { isOnline && 
-                <Badge
+                {isOnline &&
+                    <Badge
 
-                    position={"relative"}
-                    left={-2}
-                    top={6}
-                    variant="solid" colorPalette="green" borderRadius={"full"}>
+                        position={"relative"}
+                        left={-2}
+                        top={6}
+                        variant="solid" colorPalette="green" borderRadius={"full"}>
 
-                    <HiStatusOnline />
-                </Badge>
-                    }
+                        <HiStatusOnline />
+                    </Badge>
+                }
             </WrapItem>
             <Stack direction={"column"} fontSize={"sm"}>
                 <Text fontWeight={"700"} display={"flex"} alignItems={"center"}>
@@ -60,15 +60,15 @@ export default function Conversation({ conversation, isOnline }) {
                     <Image src="/verified.png" w={4} ml={2} />
                 </Text>
                 <Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
-                    {userData._id === lastMessage.sender ?(
+                    {userData._id === lastMessage.sender ? (
                         <Box>
-                            {lastMessage.seen ? 
-                           ( <BsCheck2All  size={16} />) : ( <BsCheck2   size={16} />)
-                            
-                        }
+                            {lastMessage.seen ?
+                                (<BsCheck2All size={16} />) : (<BsCheck2 size={16} />)
+
+                            }
                         </Box>
-                         ) : ""}
-                    {lastMessage.text.length > 18 ? lastMessage.text.substring(0, 18) + '...' : lastMessage.text}</Text>
+                    ) : ""}
+                    {lastMessage.text.length > 18 ? lastMessage.text.substring(0, 18) + '...' : lastMessage.text || <BsFillImageFill size={16}/>}</Text>
 
             </Stack>
         </Flex>

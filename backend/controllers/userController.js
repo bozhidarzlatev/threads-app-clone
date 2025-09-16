@@ -35,7 +35,7 @@ const signupUser = async (req, res) => {
                 email: newUser.email,
                 username: newUser.username,
                 profilePic: "",
-                bio:  ""
+                bio: ""
 
             })
         } else {
@@ -90,7 +90,7 @@ const logoutUser = async (req, res) => {
 
 
 const followUser = async (req, res) => {
-    
+
     try {
         const { id } = req.params;
         const userToModify = await User.findById(id);
@@ -139,41 +139,41 @@ const updateUser = async (req, res) => {
             user.password = hashedPassword
         }
 
-        
+
         if (profilePic) {
-            
+
             if (user.profilePic) {
-                
+
                 const delRes = await cloudinary.uploader.destroy(user.profilePic.split("/").pop().split(".")[0]);
             }
             const uploadedRes = await cloudinary.uploader.upload(profilePic);
-            
+
             profilePic = uploadedRes.secure_url;
         }
 
-        
-        
+
+
         user.name = name || user.name
         user.email = email || user.email
         user.username = username || user.username
         user.profilePic = profilePic || user.profilePic
         user.bio = bio || user.bio
-        
+
         user = await user.save();
 
         await Post.updateMany(
-            {"replies.userId": userId},
+            { "replies.userId": userId },
             {
-                $set:{
+                $set: {
                     "replies.$[reply].username": user.username,
                     "replies.$[reply].userProfilePic": user.profilePic
 
                 }
             },
-            {arrayFilters: [{"reply.userId":userId}]}
+            { arrayFilters: [{ "reply.userId": userId }] }
         )
 
-    
+
 
         res.status(200).json({ message: "Profile updated successfully", user })
     } catch (error) {
@@ -186,12 +186,12 @@ const updateUser = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
     const { query } = req.params;
-    console.log( query);
-    
+    console.log(query);
+
     try {
         let user;
-        if(mongoose.Types.ObjectId.isValid(query)){
-            
+        if (mongoose.Types.ObjectId.isValid(query)) {
+
             user = await User.findOne({ _id: query }).select("-password").select("-updatedAt");
         } else {
             user = await User.findOne({ username: query }).select("-password").select("-updatedAt");
@@ -205,11 +205,44 @@ const getUserProfile = async (req, res) => {
     }
 }
 
+const getSuggestedUsers = async (req, res) => {
+
+    try {
+        const userId = req.user._id;
+        const usersFollowedByUser = await User.findById(userId).select("following");
+
+        const users = await User.aggregate([
+            {
+                $match: {
+                    _id: { $ne: userId }
+                }
+            },
+            {
+                $sample: { size: 10 }
+            }
+        ])
+        
+        const numOfReturnedUsers = 4
+        
+        const filteredUserds = users.filter(user => !usersFollowedByUser.following.includes(user._id))
+        const suggestedUsers = filteredUserds.slice(0, numOfReturnedUsers)
+
+        suggestedUsers.forEach(user => user.password = null)
+
+        res.status(200).json(suggestedUsers)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+        console.log(`Error in getSuggestedUsers : `, error.message);
+
+    }
+}
+
 export const userController = {
     signupUser,
     loginUser,
     logoutUser,
     followUser,
     updateUser,
-    getUserProfile
+    getUserProfile,
+    getSuggestedUsers
 };
