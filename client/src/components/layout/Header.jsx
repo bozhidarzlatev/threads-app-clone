@@ -7,34 +7,15 @@ import useShowToast from "../../hooks/useShowToast";
 import { FiLogOut, FiLogIn } from "react-icons/fi";
 import { GrUserNew } from "react-icons/gr";
 import { BsFillChatQuoteFill } from "react-icons/bs";
+import { MdOutlineSettings } from "react-icons/md";
+import useLogout from "../../hooks/useLogout";
 
 export default function Header() {
     const { colorMode, toggleColorMode } = useColorMode();
-    const { userDataHandler, userData } = useUserContext()
-    const showToast = useShowToast()
+    const { userData } = useUserContext()
+    const { logout } = useLogout()
 
-    const handleLogout = async () => {
-        try {
-            const res = await fetch("/api/users/logout", {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                },
-            })
-            const data = await res.json();
 
-            if (data.error) {
-                showToast(false, data.error)
-                return
-            };
-
-            userDataHandler({})
-            showToast(true, "User logged out successfully!")
-
-        } catch (error) {
-            showToast(false, error)
-        }
-    }
 
     return (
 
@@ -66,6 +47,10 @@ export default function Header() {
                     w={8}
                     src={colorMode === "dark" ? "/logo_light.png" : "/logo_dark.png"}
                     onClick={toggleColorMode}
+                    position="absolute"
+                    left="50%"
+                    transform="translateX(-50%)"
+
                 />
                 {userData._id ? (
                     <Flex gap={2} >
@@ -82,22 +67,30 @@ export default function Header() {
                         </Link>
                         <Link to={`/chat`}>
                             <Button
-                            borderRadius={"full"}
-                            w={10}
-                            h={10}
-                            bg={"red.200"}
-                            size={"sm"}
-                           >
-                            <BsFillChatQuoteFill size={24} />
-                        </Button>
+                                borderRadius={"full"}
+                                w={10}
+                                h={10}
+                                size={"sm"}
+                            >
+                                <BsFillChatQuoteFill size={24} />
+                            </Button>
+                        </Link>
+                        <Link to={`/settings`}>
+                            <Button
+                                borderRadius={"full"}
+                                w={10}
+                                h={10}
+                                size={"sm"}
+                            >
+                                <MdOutlineSettings size={24} />
+                            </Button>
                         </Link>
                         <Button
                             borderRadius={"full"}
                             w={10}
                             h={10}
-                            bg={"red.200"}
                             size={"sm"}
-                            onClick={handleLogout}>
+                            onClick={logout}>
                             <FiLogOut />
                         </Button>
                     </Flex>

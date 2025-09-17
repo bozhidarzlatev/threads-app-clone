@@ -9,11 +9,11 @@ import SignupCard from "./components/layout/signupCard"
 import LoginCard from "./components/layout/LoginCard"
 import UpdateProfilePage from "./pages/UpdateProfilePage"
 import UserProvider from "./providers/UserProvider"
-import NavigateButtons from "./components/layout/NavigateButtons"
 import PostProvider from "./providers/PostProvider"
 import ChatPage from "./pages/ChatPage"
 import MessageProvider from "./providers/MessageProvider"
 import { SocketContextProvider } from "./contexts/SocketContext"
+import SettingsPage from "./pages/SettingsPage"
 
 function App() {
   const {pathname} = useLocation()
@@ -41,10 +41,10 @@ function App() {
                 <Route path="/:username" element={<UserPage />} />
                 <Route path="/:username/post/:pid" element={<PostPage />} />
                 <Route path="/chat" element={<ChatPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
               </Routes>
 
             </Container>
-            <NavigateButtons />
           </Box>
 
           </MessageProvider>

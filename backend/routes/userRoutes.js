@@ -11,5 +11,6 @@ router.post('/login', userController.loginUser )
 router.post('/logout', userController.logoutUser )
 router.post('/follow/:id', protectRoute, userController.followUser )
 router.put('/update/:id', protectRoute, userController.updateUser )
+router.put('/freeze', protectRoute, userController.freezeAccount )
 
 export default router;

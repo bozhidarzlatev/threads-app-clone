@@ -10,7 +10,7 @@ import { useUserContext } from "../../contexts/UserContext";
 import { useColorMode } from "../ui/color-mode";
 import { useSocket } from "../../contexts/SocketContext";
 import { useRef } from "react";
-
+import messageSound from "../../assets/sounds/message.mp3"
 
 export default function MessageContainer() {
     const showToast = useShowToast();
@@ -21,6 +21,7 @@ export default function MessageContainer() {
     const { colorMode } = useColorMode()
     const { socket } = useSocket()
     const messageEndRef = useRef(null)
+    
 
     useEffect(() => {
         socket.on("newMessage", (message) => {
@@ -29,6 +30,12 @@ export default function MessageContainer() {
 
                 setMessages((prev) => [...prev, message]);
 
+            }
+
+            if(!document.hasFocus()) {
+
+                const sound = new Audio(messageSound);
+                sound.play();
             }
 
             conversationsDataHandler((prev) => {

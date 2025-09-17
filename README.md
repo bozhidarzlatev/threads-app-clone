@@ -11,7 +11,8 @@ The Thread Clone App allows users to create, view, and interact with posts, just
 - Delete Posts: Users can delete their own posts.
 - Like Posts: Users can like any post to express approval.
 - Reply to Threads: Reply to threads to engage in conversations.
-- Chat with Other Users: Real-time messaging.
+- Chat with Other Users: Real-time messaging, statuses, seen status, notifications
+- Freeze profile
 
 ## Stack
 - This app was built with the MERN Stack:
@@ -31,5 +32,8 @@ Additionally, the app uses:
 - [X] Implement Authenticatin
 - [X] Implement post Functionalities
 - [X] Chat Functionalities
+- [X] Suggested Users
+- [X] Freeze Profile
+- [ ] Deployment
 
 

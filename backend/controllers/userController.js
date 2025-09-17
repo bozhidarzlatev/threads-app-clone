@@ -59,6 +59,11 @@ const loginUser = async (req, res) => {
 
         if (!user || !isPasswordCorrect) return res.status(400).json({ error: "Invalid username or password" })
 
+        if (user.isFrozen) {
+            user.isFrozen = false;
+            await user.save();
+        }
+
         generateTokenAndSetCookies(user._id, res);
 
         res.status(201).json({
@@ -186,7 +191,6 @@ const updateUser = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
     const { query } = req.params;
-    console.log(query);
 
     try {
         let user;
@@ -197,7 +201,7 @@ const getUserProfile = async (req, res) => {
             user = await User.findOne({ username: query }).select("-password").select("-updatedAt");
         }
 
-        if (!user) return res.status(400).json({ error: "user not found!" })
+        if (!user || user.isFrozen ) return res.status(400).json({ error: "user not found!" })
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json({ error: error.message })
@@ -221,9 +225,9 @@ const getSuggestedUsers = async (req, res) => {
                 $sample: { size: 10 }
             }
         ])
-        
+
         const numOfReturnedUsers = 4
-        
+
         const filteredUserds = users.filter(user => !usersFollowedByUser.following.includes(user._id))
         const suggestedUsers = filteredUserds.slice(0, numOfReturnedUsers)
 
@@ -237,6 +241,25 @@ const getSuggestedUsers = async (req, res) => {
     }
 }
 
+const freezeAccount = async (req, res) => {
+    try {
+
+        const user = await User.findById(req.user._id)
+        if (!user) {
+            return res.status(404).json({ error: "User not found!" })
+        }
+
+        user.isFrozen = true;
+        await user.save();
+        res.status(200).json({ message: "User profile successfuly frozen!" })
+
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+        console.log(`Error in freezeAccount : `, error.message);
+
+    }
+}
+
 export const userController = {
     signupUser,
     loginUser,
@@ -244,5 +267,6 @@ export const userController = {
     followUser,
     updateUser,
     getUserProfile,
-    getSuggestedUsers
+    getSuggestedUsers,
+    freezeAccount
 };
