@@ -30,7 +30,7 @@ export default function Conversation({ conversation, isOnline }) {
                 username: user.username,
                 mock: conversation.mock
             })}
-            bg={selectedConversations?._id === conversation._id ? "green.500" : ""}
+            bg={selectedConversations?._id === conversation._id ? "white" : ""}
             borderRadius={"md"}
         >
             <WrapItem >
@@ -38,37 +38,35 @@ export default function Conversation({ conversation, isOnline }) {
                     base: "xs",
                     sm: "sm",
                     md: "md"
-                }} >
+
+                }}
+
+                
+                    borderWidth={isOnline ? "3px" : "0"}
+                    borderColor={isOnline ? "green.400": "transparent"}
+                    borderRadius={"full"}
+                >
                     <Avatar.Fallback name="Empty User" />
-                    <Avatar.Image src={user.profilePic} />
+                    <Avatar.Image
+                        src={user.profilePic} />
                 </Avatar.Root>
-                {isOnline &&
-                    <Badge
-
-                        position={"relative"}
-                        left={-2}
-                        top={6}
-                        variant="solid" colorPalette="green" borderRadius={"full"}>
-
-                        <HiStatusOnline />
-                    </Badge>
-                }
+   
             </WrapItem>
             <Stack direction={"column"} fontSize={"sm"}>
-                <Text fontWeight={"700"} display={"flex"} alignItems={"center"}>
+                <Text fontWeight={"700"} display={"flex"} color={selectedConversations?._id === conversation._id && "black" } alignItems={"center"}>
                     {user.username}
                     <Image src="/verified.png" w={4} ml={2} />
                 </Text>
-                <Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
+                <Text fontSize={"xs"} display={"flex"} color={selectedConversations?._id === conversation._id && "black" } alignItems={"center"} gap={1}>
                     {userData._id === lastMessage.sender ? (
                         <Box>
                             {lastMessage.seen ?
-                                (<BsCheck2All size={16} />) : (<BsCheck2 size={16} />)
+                                (<BsCheck2All color={selectedConversations?._id === conversation._id && "black" } size={16} />) : (<BsCheck2 color={selectedConversations?._id === conversation._id && "black" } size={16} />)
 
                             }
                         </Box>
                     ) : ""}
-                    {lastMessage.text.length > 18 ? lastMessage.text.substring(0, 18) + '...' : lastMessage.text || <BsFillImageFill size={16}/>}</Text>
+                    {lastMessage.text.length > 18 ? lastMessage.text.substring(0, 18) + '...' : lastMessage.text || <BsFillImageFill color={selectedConversations?._id === conversation._id && "black" } size={16} />}</Text>
 
             </Stack>
         </Flex>
